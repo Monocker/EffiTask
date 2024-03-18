@@ -1,12 +1,5 @@
 <template>
-    <!--
-      This example requires updating your template:
-  
-      ```
-      <html class="h-full bg-gray-100">
-      <body class="h-full">
-      ```
-    -->
+
     <div class="min-h-full">
         <Disclosure as="nav" class="bg-gray-800" v-slot="{ open }">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -32,7 +25,7 @@
                                 <BellIcon class="h-6 w-6" aria-hidden="true" />
                             </button>
 
-                            <!-- Profile dropdown -->
+
                             <Menu as="div" class="relative ml-3">
                                 <div>
                                     <MenuButton
@@ -61,7 +54,7 @@
                         </div>
                     </div>
                     <div class="-mr-2 flex md:hidden">
-                        <!-- Mobile menu button -->
+
                         <DisclosureButton
                             class="relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                             <span class="absolute -inset-0.5" />
@@ -111,7 +104,7 @@
         </header>
         <main>
             <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
-                <!-- Your content -->
+
             </div>
         </main>
     </div>
