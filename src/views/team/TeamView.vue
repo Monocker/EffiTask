@@ -1,7 +1,6 @@
 <template>
     <div class="min-h-full">
-        <NavBarComponent />
-
+        <NavBarComponent/>
         <div class="lg:col-span-5 xl:col-span-6 flex flex-col">
             <div class="relative z-10 rounded-xl bg-white shadow-xl overflow-hidden my-auto xl:mt-18">
                 <section>
@@ -25,9 +24,9 @@
 <script >
 //import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 //import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
-import NavBarComponent from '../../components/home/dashboard/NavBarComponent.vue'
+import NavBarComponent from '../../components/shared/NavBarComponent.vue'
 import THeaderComponent from '../../components/team/THeaderComponent.vue'
-import TListComponent from '../../components/team/TListComponent.vue'
+import TListComponent from '../../components/team/cards/TListComponent.vue'
 import { ref, onMounted } from 'vue';
 
 
