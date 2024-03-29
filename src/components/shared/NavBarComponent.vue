@@ -91,10 +91,18 @@
                     </button>
                 </div>
                 <div class="mt-3 space-y-1 px-2">
+                    <DisclosureButton v-for="item in userNavigation" :key="item.name"
+                        @click="item.action ? item.action() : null"
+                        class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">
+                        {{ item.name }}
+                    </DisclosureButton>
+                </div>
+
+                <!-- <div class="mt-3 space-y-1 px-2">
                     <DisclosureButton v-for="item in userNavigation" :key="item.name" as="a" :href="item.href"
                         class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">
                         {{ item.name }}</DisclosureButton>
-                </div>
+                </div> -->
             </div>
         </DisclosurePanel>
     </Disclosure>
@@ -104,6 +112,9 @@
 import { ref } from 'vue';
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { useRouter } from 'vue-router';
+import { logoutUser } from '../../core/services/authentication/AuthentificationService';
+
 
 import { defineComponent } from 'vue';
 
@@ -124,6 +135,18 @@ export default defineComponent({
     setup() {
         const isOpen = ref(false);
 
+        var router = useRouter();
+
+        const signOut = async () => {
+            try {
+                logoutUser();
+                router.push('/');
+            } catch (error) {
+                console.error('Error al cerrar sesión:', error);
+
+            }
+        };
+
         const user = ref({
             name: 'Tom Cook',
             email: 'tom@example.com',
@@ -141,7 +164,7 @@ export default defineComponent({
         const userNavigation = ref([
             { name: 'Your Profile', href: '#' },
             { name: 'Settings', href: '#' },
-            { name: 'Sign out', href: '#' }
+            { name: 'Sign out', action: signOut }
         ]);
 
         const toggleMenu = () => {

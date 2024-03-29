@@ -4,12 +4,13 @@
         <div class="lg:col-span-5 xl:col-span-6 flex flex-col">
             <div class="relative z-10 rounded-xl bg-white shadow-xl overflow-hidden my-auto xl:mt-18">
                 <section>
-                    <HeaderComponent />
+                    <HeaderComponent @open-modal="showModal = true" />
+
                     <CardsComponent />
                 </section>
             </div>
         </div>
-
+        <ModalComponent :isOpen="showModal" @update:isOpen="showModal = $event" />
     </div>
 </template>
 
@@ -26,16 +27,19 @@
 import NavBarComponent from '../../components/shared/NavBarComponent.vue'
 import CardsComponent from '../../components/home/dashboard/cards/CardsComponent.vue';
 import HeaderComponent from '../../components/home/dashboard/HeaderComponent.vue'
+import ModalComponent from '../../components/home/dashboard/modal/ModalComponent.vue'
 
 
 export default {
     components: {
         NavBarComponent,
         HeaderComponent,
-        CardsComponent
+        CardsComponent,
+        ModalComponent
     },
     data() {
         return {
+            showModal: false,
             user: {
                 name: 'Tom Cook',
                 email: 'tom@example.com',

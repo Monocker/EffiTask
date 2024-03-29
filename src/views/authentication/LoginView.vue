@@ -53,6 +53,43 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import Swal from 'sweetalert2';
+import { loginUser } from '../../core/services/authentication/AuthentificationService';
+import router from '../../router';
+
+const email = ref('');
+const password = ref('');
+
+const submitForm = async () => {
+    try {
+        await loginUser(email.value, password.value);
+        router.push('/dashboard'); // o la ruta que corresponda a tu página de inicio
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de inicio de sesión',
+                text: error.message,
+            });
+        } else {
+            // Manejar casos en que el error no es una instancia de Error
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Ocurrió un error desconocido.',
+            });
+        }
+    }
+};
+
+const navigateToRegister = () => {
+    router.push('/register');
+};
+</script>
+
+<!-- 
+<script setup lang="ts">
+import { ref } from 'vue';
 import { loginUser } from '../../core/services/authentication/AuthentificationService';
 import router from '../../router';
 
@@ -76,4 +113,4 @@ const submitForm = async () => {
 const navigateToRegister = () => {
     router.push('/register');
 };
-</script>
+</script> -->
