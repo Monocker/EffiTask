@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 /* import HomeView from '../views/HomeView.vue' */
 /* import {  } from "../views/home/HomeView"; */
 import HomeView from '../views/home/HomeView.vue'
+import TeamView from '../views/team/TeamView.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -35,9 +37,9 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/team',
+      path: '/team', // Agrega la ruta del equipo
       name: 'team',
-      component: () => import('../views/team/TeamView.vue')
+      component: TeamView // Usa la vista del equipo importada
     }
   ]
 })

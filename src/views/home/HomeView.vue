@@ -1,8 +1,7 @@
 <template>
-
-
     <div class="min-h-full">
-        <Disclosure as="nav" class="bg-gray-800" v-slot="{ open }">
+        <NavBarComponent/>
+        <!-- <Disclosure as="nav" class="bg-gray-800" v-slot="{ open }">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="flex h-16 items-center justify-between">
                     <div class="flex items-center">
@@ -96,7 +95,7 @@
                     </div>
                 </div>
             </DisclosurePanel>
-        </Disclosure>
+        </Disclosure> -->
 
         <div class="lg:col-span-5 xl:col-span-6 flex flex-col">
             <div class="relative z-10 rounded-xl bg-white shadow-xl overflow-hidden my-auto xl:mt-18">
@@ -164,43 +163,37 @@
 }
 </style>
 
-<script setup lang="ts">
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+<script>
+//import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+//import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 
-import { onMounted, ref } from 'vue';
+import NavBarComponent from '../../components/home/dashboard/NavBarComponent.vue'
+/* onMo */
 
-let isMenuOpen = ref(false);
-
-// Cerrar el menú cuando se hace clic fuera de él
-onMounted(() => {
-    document.addEventListener('click', closeMenuOnClickOutside);
-});
-
-const closeMenuOnClickOutside = (event: any) => {
-    const menu = document.querySelector('.relative.ml-3');
-
-    if (menu && !menu.contains(event.target)) {
-        isMenuOpen.value = false;
+/*  */
+export default {
+  components: {
+    NavBarComponent
+  },
+  data() {
+    return {
+      user: {
+        name: 'Tom Cook',
+        email: 'tom@example.com',
+        imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      },
+      navigation: [
+        { name: 'Dashboard', href: '/dashboard', current: false },
+        { name: 'Team', href: '/team', current: false },
+        // más elementos de navegación...
+      ],
+      userNavigation: [
+        { name: 'Your Profile', href: '#' },
+        { name: 'Settings', href: '#' },
+        { name: 'Sign out', href: '#' },
+      ],
+      // cualquier otra data que necesites
     }
+  },
 };
-
-const user = {
-    name: 'Tom Cook',
-    email: 'tom@example.com',
-    imageUrl:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-}
-const navigation = [
-    { name: 'Dashboard', href: '#', current: true },
-    { name: 'Team', href: '#', current: false },
-    { name: 'Projects', href: '#', current: false },
-    { name: 'Calendar', href: '#', current: false },
-    { name: 'Reports', href: '#', current: false },
-]
-const userNavigation = [
-    { name: 'Your Profile', href: '#' },
-    { name: 'Settings', href: '#' },
-    { name: 'Sign out', href: '#' },
-]
 </script>
