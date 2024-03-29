@@ -1,8 +1,7 @@
 <template>
     <div class="min-h-full">
-        <!-- Hola desde el Team View -->
-        <NavBarComponent/>
-        
+        <NavBarComponent />
+
         <div class="lg:col-span-5 xl:col-span-6 flex flex-col">
             <div class="relative z-10 rounded-xl bg-white shadow-xl overflow-hidden my-auto xl:mt-18">
                 <section>
@@ -31,10 +30,10 @@ import THeaderComponent from '../../components/team/THeaderComponent.vue'
 import TListComponent from '../../components/team/TListComponent.vue'
 import { ref, onMounted } from 'vue';
 
-// Define la variable reactiva dentro de setup
+
 let isMenuOpen = ref(false);
 
-// Cerrar el menú cuando se hace clic fuera de él
+
 onMounted(() => {
     document.addEventListener('click', closeMenuOnClickOutside);
 });
@@ -127,6 +126,5 @@ export default {
     }
   },
 };
-/* antes de ingresar people */
 
 </script>
