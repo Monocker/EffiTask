@@ -1,100 +1,6 @@
 <template>
     <div class="min-h-full">
-        <Disclosure as="nav" class="bg-gray-800" v-slot="{ open }">
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="flex h-16 items-center justify-between">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <img class="h-8 w-8" src="../../assets/img/icon.png" alt="Your Company" />
-                        </div>
-                        <div class="hidden md:block">
-                            <div class="ml-10 flex items-baseline space-x-4">
-                                <a v-for="item in navigation" :key="item.name" :href="item.href"
-                                    :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium']"
-                                    :aria-current="item.current ? 'page' : undefined">{{ item.name }}</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="hidden md:block">
-                        <div class="ml-4 flex items-center md:ml-6">
-                            <button type="button"
-                                class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                                <span class="absolute -inset-1.5" />
-                                <span class="sr-only">View notifications</span>
-                                <BellIcon class="h-6 w-6" aria-hidden="true" />
-                            </button>
-
-
-                            <Menu as="div" class="relative ml-3">
-                                <div>
-                                    <MenuButton
-                                        class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                                        <span class="absolute -inset-1.5" />
-                                        <span class="sr-only">Open user menu</span>
-                                        <img class="h-8 w-8 rounded-full" :src="user.imageUrl" alt="" />
-                                    </MenuButton>
-                                </div>
-                                <transition enter-active-class="transition ease-out duration-100"
-                                    enter-from-class="transform opacity-0 scale-95"
-                                    enter-to-class="transform opacity-100 scale-100"
-                                    leave-active-class="transition ease-in duration-75"
-                                    leave-from-class="transform opacity-100 scale-100"
-                                    leave-to-class="transform opacity-0 scale-95">
-                                    <MenuItems
-                                        class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                        <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
-                                        <a :href="item.href"
-                                            :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">{{
-            item.name }}</a>
-                                        </MenuItem>
-                                    </MenuItems>
-                                </transition>
-                            </Menu>
-                        </div>
-                    </div>
-                    <div class="-mr-2 flex md:hidden">
-
-                        <DisclosureButton
-                            class="relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                            <span class="absolute -inset-0.5" />
-                            <span class="sr-only">Open main menu</span>
-                            <Bars3Icon v-if="!open" class="block h-6 w-6" aria-hidden="true" />
-                            <XMarkIcon v-else class="block h-6 w-6" aria-hidden="true" />
-                        </DisclosureButton>
-                    </div>
-                </div>
-            </div>
-
-            <DisclosurePanel class="md:hidden">
-                <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
-                    <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :href="item.href"
-                        :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'block rounded-md px-3 py-2 text-base font-medium']"
-                        :aria-current="item.current ? 'page' : undefined">{{ item.name }}</DisclosureButton>
-                </div>
-                <div class="border-t border-gray-700 pb-3 pt-4">
-                    <div class="flex items-center px-5">
-                        <div class="flex-shrink-0">
-                            <img class="h-10 w-10 rounded-full" :src="user.imageUrl" alt="" />
-                        </div>
-                        <div class="ml-3">
-                            <div class="text-base font-medium leading-none text-white">{{ user.name }}</div>
-                            <div class="text-sm font-medium leading-none text-gray-400">{{ user.email }}</div>
-                        </div>
-                        <button type="button"
-                            class="relative ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                            <span class="absolute -inset-1.5" />
-                            <span class="sr-only">View notifications</span>
-                            <BellIcon class="h-6 w-6" aria-hidden="true" />
-                        </button>
-                    </div>
-                    <div class="mt-3 space-y-1 px-2">
-                        <DisclosureButton v-for="item in userNavigation" :key="item.name" as="a" :href="item.href"
-                            class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">
-                            {{ item.name }}</DisclosureButton>
-                    </div>
-                </div>
-            </DisclosurePanel>
-        </Disclosure>
+        <NavBarComponent />
 
         <div class="lg:col-span-5 xl:col-span-6 flex flex-col">
             <div class="relative z-10 rounded-xl bg-white shadow-xl overflow-hidden my-auto xl:mt-18">
@@ -153,9 +59,6 @@
             </div>
         </div>
 
-
-
-
     </div>
 </template>
 
@@ -167,20 +70,20 @@
 }
 </style>
 
-<script setup lang="ts">
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+<script>
 
-import { onMounted, ref } from 'vue';
+import NavBarComponent from '../../components/shared/NavBarComponent.vue'
+import { ref, onMounted } from 'vue';
+
 
 let isMenuOpen = ref(false);
 
-// Cerrar el menú cuando se hace clic fuera de él
+
 onMounted(() => {
     document.addEventListener('click', closeMenuOnClickOutside);
 });
 
-const closeMenuOnClickOutside = (event: any) => {
+const closeMenuOnClickOutside = (event) => {
     const menu = document.querySelector('.relative.ml-3');
 
     if (menu && !menu.contains(event.target)) {
@@ -188,78 +91,83 @@ const closeMenuOnClickOutside = (event: any) => {
     }
 };
 
-const user = {
-    name: 'Tom Cook',
-    email: 'tom@example.com',
-    imageUrl:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-}
-const navigation = [
-    { name: 'Dashboard', href: '#', current: true },
-    { name: 'Team', href: '#', current: false },
-    { name: 'Projects', href: '#', current: false },
-    { name: 'Calendar', href: '#', current: false },
-    { name: 'Reports', href: '#', current: false },
-]
-const userNavigation = [
-    { name: 'Your Profile', href: '#' },
-    { name: 'Settings', href: '#' },
-    { name: 'Sign out', href: '#' },
-]
+export default {
+    components: {
+        NavBarComponent
+    },
+    data() {
+        return {
+            user: {
+                name: 'Tom Cook',
+                email: 'tom@example.com',
+                imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+            },
+            navigation: [
+                { name: 'Dashboard', href: '/dashboard', current: false },
+                { name: 'Team', href: '/team', current: true },
+                // más elementos de navegación...
+            ],
+            userNavigation: [
+                { name: 'Your Profile', href: '#' },
+                { name: 'Settings', href: '#' },
+                { name: 'Sign out', href: '#' },
+            ],
+            people: [
+                {
+                    name: 'Leslie Alexander',
+                    email: 'leslie.alexander@example.com',
+                    role: 'Co-Founder / CEO',
+                    imageUrl:
+                        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                    lastSeen: '3h ago',
+                    lastSeenDateTime: '2023-01-23T13:23Z',
+                },
+                {
+                    name: 'Michael Foster',
+                    email: 'michael.foster@example.com',
+                    role: 'Co-Founder / CTO',
+                    imageUrl:
+                        'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                    lastSeen: '3h ago',
+                    lastSeenDateTime: '2023-01-23T13:23Z',
+                },
+                {
+                    name: 'Dries Vincent',
+                    email: 'dries.vincent@example.com',
+                    role: 'Business Relations',
+                    imageUrl:
+                        'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                    lastSeen: null,
+                },
+                {
+                    name: 'Lindsay Walton',
+                    email: 'lindsay.walton@example.com',
+                    role: 'Front-end Developer',
+                    imageUrl:
+                        'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                    lastSeen: '3h ago',
+                    lastSeenDateTime: '2023-01-23T13:23Z',
+                },
+                {
+                    name: 'Courtney Henry',
+                    email: 'courtney.henry@example.com',
+                    role: 'Designer',
+                    imageUrl:
+                        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                    lastSeen: '3h ago',
+                    lastSeenDateTime: '2023-01-23T13:23Z',
+                },
+                {
+                    name: 'Tom Cook',
+                    email: 'tom.cook@example.com',
+                    role: 'Director of Product',
+                    imageUrl:
+                        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                    lastSeen: null,
+                },
+            ]
+        }
+    },
+};
 
-
-const people = [
-    {
-        name: 'Leslie Alexander',
-        email: 'leslie.alexander@example.com',
-        role: 'Co-Founder / CEO',
-        imageUrl:
-            'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        lastSeen: '3h ago',
-        lastSeenDateTime: '2023-01-23T13:23Z',
-    },
-    {
-        name: 'Michael Foster',
-        email: 'michael.foster@example.com',
-        role: 'Co-Founder / CTO',
-        imageUrl:
-            'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        lastSeen: '3h ago',
-        lastSeenDateTime: '2023-01-23T13:23Z',
-    },
-    {
-        name: 'Dries Vincent',
-        email: 'dries.vincent@example.com',
-        role: 'Business Relations',
-        imageUrl:
-            'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        lastSeen: null,
-    },
-    {
-        name: 'Lindsay Walton',
-        email: 'lindsay.walton@example.com',
-        role: 'Front-end Developer',
-        imageUrl:
-            'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        lastSeen: '3h ago',
-        lastSeenDateTime: '2023-01-23T13:23Z',
-    },
-    {
-        name: 'Courtney Henry',
-        email: 'courtney.henry@example.com',
-        role: 'Designer',
-        imageUrl:
-            'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        lastSeen: '3h ago',
-        lastSeenDateTime: '2023-01-23T13:23Z',
-    },
-    {
-        name: 'Tom Cook',
-        email: 'tom.cook@example.com',
-        role: 'Director of Product',
-        imageUrl:
-            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        lastSeen: null,
-    },
-]
 </script>
