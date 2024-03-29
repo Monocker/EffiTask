@@ -1,6 +1,4 @@
 <template>
-
-
     <div class="min-h-full">
         <Disclosure as="nav" class="bg-gray-800" v-slot="{ open }">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -103,7 +101,7 @@
                 <section>
                     <header class="rounded-t-xl space-y-4 p-4 sm:px-8 sm:py-6 lg:p-4 xl:px-8 xl:py-6">
                         <div class="flex items-center justify-between">
-                            <h2 class="font-semibold text-gray-900">Projects</h2>
+                            <h2 class="font-semibold text-gray-900">Collaborators</h2>
                             <div
                                 class="group flex items-center rounded-md bg-blue-500 text-white text-sm font-medium pl-2 pr-3 py-2 cursor-pointer shadow-sm hover:bg-blue-400">
                                 <svg width="20" height="20" fill="currentColor" class="mr-2">
@@ -120,38 +118,43 @@
                                     d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z">
                                 </path>
                             </svg>
-                            <input type="text" aria-label="Filter projects" placeholder="Filter projects..."
+                            <input type="text" aria-label="Filter projects" placeholder="Filter collaborators..."
                                 class="appearance-none w-full text-sm leading-6 bg-transparent text-gray-900 placeholder-gray-400 rounded-md py-2 pl-10 ring-1 ring-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                     </header>
-                    <ul
-                        class="bg-gray-50 p-4 sm:px-8 sm:pt-6 sm:pb-8 lg:p-4 xl:px-8 xl:pt-6 xl:pb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4 text-sm leading-6">
-                        <li
-                            class="group cursor-pointer rounded-md p-3 bg-white ring-1 ring-gray-200 shadow-sm hover:bg-blue-500 hover:ring-blue-500 hover:shadow-md">
-                            <dl class="grid sm:block lg:grid xl:block grid-cols-2 grid-rows-2 items-center">
-                                <div>
-                                    <dt class="sr-only">Title</dt>
-                                    <dd class="font-semibold text-gray-900 group-hover:text-white">API Integration</dd>
+                    <div class="px-4 py-2">
+                        <ul role="list" class="divide-y divide-gray-100">
+                            <li v-for="person in people" :key="person.email" class="flex justify-between gap-x-6 py-5">
+                                <div class="flex min-w-0 gap-x-4">
+                                    <img class="h-12 w-12 flex-none rounded-full bg-gray-50" :src="person.imageUrl"
+                                        alt="" />
+                                    <div class="min-w-0 flex-auto">
+                                        <p class="text-sm font-semibold leading-6 text-gray-900">{{ person.name }}</p>
+                                        <p class="mt-1 truncate text-xs leading-5 text-gray-500">{{ person.email }}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <dt class="sr-only">Category</dt>
-                                    <dd class="group-hover:text-blue-200">Engineering</dd>
+                                <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
+                                    <p class="text-sm leading-6 text-gray-900">{{ person.role }}</p>
+                                    <p v-if="person.lastSeen" class="mt-1 text-xs leading-5 text-gray-500">
+                                        Last seen <time :datetime="person.lastSeenDateTime">{{ person.lastSeen }}</time>
+                                    </p>
+                                    <div v-else class="mt-1 flex items-center gap-x-1.5">
+                                        <div class="flex-none rounded-full bg-emerald-500/20 p-1">
+                                            <div class="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                                        </div>
+                                        <p class="text-xs leading-5 text-gray-500">Online</p>
+                                    </div>
                                 </div>
-                                <div class="col-start-2 row-start-1 row-end-3">
-                                    <dt class="sr-only">Users</dt>
-                                    <dd class="flex justify-end -space-x-1.5">
-                                        <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=facearea&facepad=2&w=48&h=48&q=80"
-                                            alt="" class="w-6 h-6 rounded-full bg-gray-100 ring-2 ring-white">
-                                        <!-- Otros avatares -->
-                                    </dd>
-                                </div>
-                            </dl>
-                        </li>
-                        <!-- Más elementos de la lista -->
-                    </ul>
+                            </li>
+                        </ul>
+                    </div>
+
                 </section>
             </div>
         </div>
+
+
+
 
     </div>
 </template>
@@ -202,5 +205,61 @@ const userNavigation = [
     { name: 'Your Profile', href: '#' },
     { name: 'Settings', href: '#' },
     { name: 'Sign out', href: '#' },
+]
+
+
+const people = [
+    {
+        name: 'Leslie Alexander',
+        email: 'leslie.alexander@example.com',
+        role: 'Co-Founder / CEO',
+        imageUrl:
+            'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+        lastSeen: '3h ago',
+        lastSeenDateTime: '2023-01-23T13:23Z',
+    },
+    {
+        name: 'Michael Foster',
+        email: 'michael.foster@example.com',
+        role: 'Co-Founder / CTO',
+        imageUrl:
+            'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+        lastSeen: '3h ago',
+        lastSeenDateTime: '2023-01-23T13:23Z',
+    },
+    {
+        name: 'Dries Vincent',
+        email: 'dries.vincent@example.com',
+        role: 'Business Relations',
+        imageUrl:
+            'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+        lastSeen: null,
+    },
+    {
+        name: 'Lindsay Walton',
+        email: 'lindsay.walton@example.com',
+        role: 'Front-end Developer',
+        imageUrl:
+            'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+        lastSeen: '3h ago',
+        lastSeenDateTime: '2023-01-23T13:23Z',
+    },
+    {
+        name: 'Courtney Henry',
+        email: 'courtney.henry@example.com',
+        role: 'Designer',
+        imageUrl:
+            'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+        lastSeen: '3h ago',
+        lastSeenDateTime: '2023-01-23T13:23Z',
+    },
+    {
+        name: 'Tom Cook',
+        email: 'tom.cook@example.com',
+        role: 'Director of Product',
+        imageUrl:
+            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+        lastSeen: null,
+    },
 ]
 </script>

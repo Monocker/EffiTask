@@ -33,6 +33,11 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard',
       component: HomeView
+    },
+    {
+      path: '/team',
+      name: 'team',
+      component: () => import('../views/team/TeamView.vue')
     }
   ]
 })
