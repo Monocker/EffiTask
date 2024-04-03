@@ -5,7 +5,7 @@ import TeamView from '../views/team/TeamView.vue'
 import LoginView from '../views/authentication/LoginView.vue'
 import RegisterView from '../views/authentication/RegisterView.vue'
 import Swal from 'sweetalert2'
-import CalendarView from '../views/Calendars/CalendarView.vue'
+/* import CalendarView from '../views/Calendars/CalendarView.vue' */
 
 const auth = getAuth()
 
@@ -36,13 +36,13 @@ const routes = [
     name: 'team',
     component: TeamView,
     meta: { requiresAuth: true }
-  },
-  {
+  }
+  /*  {
     path: '/calendar',
     name: 'calendar',
     component: CalendarView,
     meta: { requiresAuth: true }
-  }
+  } */
   // ...otros paths
 ]
 
