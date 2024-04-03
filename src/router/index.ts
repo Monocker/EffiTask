@@ -53,6 +53,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
+  const isAuthRoute = to.path === '/login' || to.path === '/register'
 
   onAuthStateChanged(auth, (user) => {
     if (requiresAuth && !user) {
@@ -63,6 +64,8 @@ router.beforeEach((to, from, next) => {
       }).then(() => {
         next('/login')
       })
+    } else if (user && isAuthRoute) {
+      next('/dashboard') // Redirige al dashboard si el usuario está autenticado y trata de acceder a login o register
     } else {
       next()
     }
