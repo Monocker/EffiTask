@@ -1,5 +1,5 @@
 <template>
-    <Disclosure as="nav" class="bg-gray-800">
+    <Disclosure as="nav" class="bg-gray-800 navbar">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="flex h-16 items-center justify-between">
                 <div class="flex items-center">
@@ -23,7 +23,7 @@
                             <BellIcon class="h-6 w-6" aria-hidden="true" />
                         </button>
 
-                        <AppMenu as="div" class="relative inline-block text-left">
+                        <AppMenu as="div" class="relative inline-block text-left z-50">
                             <MenuButton
                                 class="inline-flex w-full justify-center rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-30 focus:outline-none">
                                 Opciones
@@ -182,4 +182,9 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style>
+.navbar {
+    z-index: 50;
+    /* Ajusta este valor según sea necesario */
+}
+</style>
