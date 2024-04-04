@@ -1,47 +1,82 @@
 import { createRouter, createWebHistory } from 'vue-router'
-/* import HomeView from '../views/HomeView.vue' */
-/* import {  } from "../views/home/HomeView"; */
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import HomeView from '../views/home/HomeView.vue'
 import TeamView from '../views/team/TeamView.vue'
+import LoginView from '../views/authentication/LoginView.vue'
+import RegisterView from '../views/authentication/RegisterView.vue'
+import Swal from 'sweetalert2'
+import ActivityView from '../views/activity/ActivityView.vue'
+/* import CalendarView from '../views/Calendars/CalendarView.vue' */
+
+const auth = getAuth()
+
+const routes = [
+  {
+    path: '/',
+    name: 'home',
+    component: () => import('../views/AboutView.vue')
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: LoginView
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: RegisterView
+  },
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: HomeView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/team',
+    name: 'team',
+    component: TeamView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/activity',
+    name: 'activity',
+    component: ActivityView,
+    meta: { requiresAuth: true }
+  }
+  /*  {
+    path: '/calendar',
+    name: 'calendar',
+    component: CalendarView,
+    meta: { requiresAuth: true }
+  } */
+  // ...otros paths
+]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    /* {
-      path: '/',
-      name: 'home',
-      component: HomeView
-    }, */
-    {
-      path: '/',
-      name: 'home',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    },
-    {
-      path: '/login',
-      name: 'login',
-      // Importación dinámica para carga diferida
-      component: () => import('../views/authentication/LoginView.vue')
-    },
-    {
-      path: '/register',
-      name: 'register',
-      component: () => import('../views/authentication/RegisterView.vue')
-    },
-    {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: HomeView
-    },
-    {
-      path: '/team', // Agrega la ruta del equipo
-      name: 'team',
-      component: TeamView // Usa la vista del equipo importada
+  routes
+})
+
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
+  const isAuthRoute = to.path === '/login' || to.path === '/register'
+
+  onAuthStateChanged(auth, (user) => {
+    if (requiresAuth && !user) {
+      Swal.fire({
+        icon: 'info',
+        title: 'Acceso restringido',
+        text: 'Debes iniciar sesión para acceder a esta página.'
+      }).then(() => {
+        next('/login')
+      })
+    } else if (user && isAuthRoute) {
+      next('/dashboard') // Redirige al dashboard si el usuario está autenticado y trata de acceder a login o register
+    } else {
+      next()
     }
-  ]
+  })
 })
 
 export default router

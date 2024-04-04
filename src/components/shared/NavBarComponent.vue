@@ -1,5 +1,47 @@
 <template>
-    <Disclosure as="nav" class="bg-gray-800">
+<<<<<<<< HEAD:src/components/home/dashboard/NavBarComponent.vue
+  <nav class="bg-white shadow">
+    <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+      <a class="text-gray-800 text-xl font-bold hover:text-gray-700" href="#">EffiTask</a>
+      <div class="flex items-center">
+        <button @click="toggleMenu" class="md:hidden text-gray-500 hover:text-gray-600 focus:outline-none">
+          <svg viewBox="0 0 24 24" class="h-6 w-6 fill-current">
+            <path fill-rule="evenodd" d="M4 5h16v2H4V5zm0 6h16v2H4v-2zm0 6h16v2H4v-2z"></path>
+          </svg>
+        </button>
+      </div>
+      <div :class="{ 'hidden': !isOpen, 'flex': isOpen }" class="w-full md:flex md:items-center md:justify-between">
+        <div class="flex flex-col md:flex-row md:mx-6">
+          <a class="my-1 text-gray-700 hover:text-blue-500 md:mx-4 md:my-0" href="#">Features</a>
+          <a class="my-1 text-gray-700 hover:text-blue-500 md:mx-4 md:my-0" href="#">About Us</a>
+        </div>
+        <div class="flex justify-center md:block">
+          <a class="relative text-white bg-blue-500 hover:bg-blue-600 py-2 px-4 md:ml-4 rounded" href="#">
+            <router-link to="/register">
+              Get Started
+            </router-link></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</template>
+
+<script lang="ts">
+import { ref } from 'vue';
+import { defineComponent } from 'vue';
+export default defineComponent({
+  name: 'NavBarComponent',
+  setup() {
+    const isOpen = ref(false);
+
+    const toggleMenu = () => {
+      isOpen.value = !isOpen.value;
+    };
+
+    return { isOpen, toggleMenu };
+  },
+========
+    <Disclosure as="nav" class="bg-gray-800 navbar">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="flex h-16 items-center justify-between">
                 <div class="flex items-center">
@@ -23,7 +65,7 @@
                             <BellIcon class="h-6 w-6" aria-hidden="true" />
                         </button>
 
-                        <AppMenu as="div" class="relative inline-block text-left">
+                        <AppMenu as="div" class="relative inline-block text-left z-50">
                             <MenuButton
                                 class="inline-flex w-full justify-center rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-30 focus:outline-none">
                                 Opciones
@@ -91,10 +133,18 @@
                     </button>
                 </div>
                 <div class="mt-3 space-y-1 px-2">
+                    <DisclosureButton v-for="item in userNavigation" :key="item.name"
+                        @click="item.action ? item.action() : null"
+                        class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">
+                        {{ item.name }}
+                    </DisclosureButton>
+                </div>
+
+                <!-- <div class="mt-3 space-y-1 px-2">
                     <DisclosureButton v-for="item in userNavigation" :key="item.name" as="a" :href="item.href"
                         class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">
                         {{ item.name }}</DisclosureButton>
-                </div>
+                </div> -->
             </div>
         </DisclosurePanel>
     </Disclosure>
@@ -104,6 +154,9 @@
 import { ref } from 'vue';
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { useRouter } from 'vue-router';
+import { logoutUser } from '../../core/services/authentication/AuthentificationService';
+
 
 import { defineComponent } from 'vue';
 
@@ -124,6 +177,18 @@ export default defineComponent({
     setup() {
         const isOpen = ref(false);
 
+        var router = useRouter();
+
+        const signOut = async () => {
+            try {
+                logoutUser();
+                router.push('/');
+            } catch (error) {
+                console.error('Error al cerrar sesión:', error);
+
+            }
+        };
+
         const user = ref({
             name: 'Tom Cook',
             email: 'tom@example.com',
@@ -141,7 +206,7 @@ export default defineComponent({
         const userNavigation = ref([
             { name: 'Your Profile', href: '#' },
             { name: 'Settings', href: '#' },
-            { name: 'Sign out', href: '#' }
+            { name: 'Sign out', action: signOut }
         ]);
 
         const toggleMenu = () => {
@@ -156,7 +221,20 @@ export default defineComponent({
             toggleMenu
         };
     },
+>>>>>>>> developer:src/components/shared/NavBarComponent.vue
 });
 </script>
 
-<style></style>
+<style>
+<<<<<<<< HEAD:src/components/home/dashboard/NavBarComponent.vue
+@media (max-width: 768px) {
+  .hidden {
+    display: none;
+  }
+========
+.navbar {
+    z-index: 50;
+    /* Ajusta este valor según sea necesario */
+>>>>>>>> developer:src/components/shared/NavBarComponent.vue
+}
+</style>
