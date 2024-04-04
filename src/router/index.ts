@@ -6,7 +6,7 @@ import LoginView from '../views/authentication/LoginView.vue'
 import RegisterView from '../views/authentication/RegisterView.vue'
 import Swal from 'sweetalert2'
 import ActivityView from '../views/activity/ActivityView.vue'
-/* import CalendarView from '../views/Calendars/CalendarView.vue' */
+import CalendarView from '@/views/calendar/CalendarView.vue'
 
 const auth = getAuth()
 
@@ -43,13 +43,13 @@ const routes = [
     name: 'activity',
     component: ActivityView,
     meta: { requiresAuth: true }
-  }
-  /*  {
+  },
+  {
     path: '/calendar',
     name: 'calendar',
     component: CalendarView,
     meta: { requiresAuth: true }
-  } */
+  } 
   // ...otros paths
 ]
 

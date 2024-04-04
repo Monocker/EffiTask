@@ -157,7 +157,7 @@ export default defineComponent({
             { name: 'Dashboard', href: '/dashboard', current: false },
             { name: 'Team', href: '/team', current: false },
             { name: 'Projects', href: '#', current: false },
-            { name: 'Calendar', href: '#', current: false },
+            { name: 'Calendar', href: '/calendar', current: false },
             { name: 'Reports', href: '#', current: false }
         ]);
 
