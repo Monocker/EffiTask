@@ -79,19 +79,22 @@ export default {
 
     methods: {
         fetchColaboradores() {
-            const managerId = 'pIkDcJTndUYq7OF2lMwlvxTNylF3'; // Debes obtener el ID del manager actual
-            const q = query(collection(db, 'collaborators'), where('managerId', '==', managerId));
+            const user = auth.currentUser;
+            if (user) {
+                const managerId = user.uid;
+                const q = query(collection(db, 'collaborators'), where('managerId', '==', managerId));
 
-            onSnapshot(q, (querySnapshot) => {
-                const colaboradores = [];
-                querySnapshot.forEach((doc) => {
-                    colaboradores.push({ id: doc.id, ...doc.data() });
+                onSnapshot(q, (querySnapshot) => {
+                    const colaboradores = [];
+                    querySnapshot.forEach((doc) => {
+                        colaboradores.push({ id: doc.id, ...doc.data() });
+                    });
+                    this.people = colaboradores;
                 });
-                console.log(colaboradores)
-                this.people = colaboradores;
-            });
+            }
         }
     }
+
 };
 
 </script>
