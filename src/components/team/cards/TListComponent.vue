@@ -1,16 +1,16 @@
 <template>
     <div class="px-4 py-2">
         <ul role="list" class="divide-y divide-gray-100">
-        <TCardComponent :person="user" />
-        <TCardComponent v-for="person in people" :key="person.email" :person="person" />
+
+            <TCardComponent v-for="person in people" :key="person.email" :person="person" />
         </ul>
     </div>
-    </template>
+</template>
 
-    <script>
-    import TCardComponent from './TCardComponent.vue';
+<script>
+import TCardComponent from './TCardComponent.vue';
 
-    export default {
+export default {
     components: {
         TCardComponent
     },
@@ -18,5 +18,5 @@
         people: Array,
         user: Object
     }
-    };
-    </script>   
+};
+</script>
