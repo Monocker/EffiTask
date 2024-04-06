@@ -26,9 +26,10 @@
   </div>
 </template>
 
+
 <script>
-import { db } from '../../../core/services/firebase/firebaseConfig';
-import { collection, addDoc } from 'firebase/firestore';
+import { db, auth } from '../../../core/services/firebase/firebaseConfig';
+import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
 import Swal from 'sweetalert2';
 
 export default {
@@ -48,6 +49,15 @@ export default {
     };
   },
   methods: {
+    generateToken(length) {
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let token = '';
+      for (let i = 0; i < length; i++) {
+        token += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return token;
+    },
+
     resetForm() {
       this.fullName = '';
       this.mail = '';
@@ -55,10 +65,12 @@ export default {
       this.positionRole = '';
       this.notesOrComments = '';
     },
+
     closeModal() {
       this.resetForm();
       this.$emit('update:isOpen', false);
     },
+
     async submitForm() {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -90,13 +102,176 @@ export default {
       }
 
       try {
-        // Aquí agregas el colaborador a la base de datos de Firebase
+        const user = auth.currentUser;
+        const managerId = user ? user.uid : null;
+
+        // Verifica si el correo ya existe en la colección 'collaborators'
+        const collaboratorsRef = collection(db, "collaborators");
+        const q = query(collaboratorsRef, where("mail", "==", this.mail));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          // Ya existe un colaborador con este correo electrónico
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Ya existe un colaborador con este correo electrónico.',
+          });
+          return;
+        }
+
+        // Si no existe, agrega el nuevo colaborador
+        const docRef = await addDoc(collaboratorsRef, {
+          fullName: this.fullName,
+          mail: this.mail,
+          departmentArea: this.departmentArea,
+          positionRole: this.positionRole,
+          notesOrComments: this.notesOrComments,
+          managerId: managerId,
+          token: this.generateToken(8)
+        });
+
+        console.log("Document written with ID: ", docRef.id);
+
+        // Envía el correo electrónico
+        const response = await fetch('http://localhost:3000/send-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            fullName: this.fullName,
+            email: this.mail,
+            subject: 'Bienvenido al grupo de trabajo',
+            html: `
+              <div style="font-family: Arial, sans-serif; color: #333;">
+                <h2 style="color: #4A90E2;">Bienvenido al grupo de trabajo</h2>
+                <p>Hola ${this.fullName},</p>
+                <p>Bienvenido al departamento de ${this.departmentArea}. Tu rol será ${this.positionRole}.</p>
+                <p>Por favor, <a href="http://www.tu-sitio-web.com/registro?token=${token}" style="color: #4A90E2; text-decoration: none;">haz clic aquí</a> para terminar con tu registro.</p>
+                <p style="font-size: 0.9em; color: #666;">Si tienes alguna pregunta, no dudes en contactarnos.</p>
+              </div>
+            `
+          }),
+        });
+
+        if (response.ok) {
+          // Correo enviado con éxito
+          Swal.fire({
+            icon: 'success',
+            title: 'Correo enviado',
+            text: 'Se ha notificado al colaborador por correo electrónico.',
+          });
+        } else {
+          // Error al enviar el correo
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo enviar el correo electrónico al colaborador.',
+          });
+        }
+
+        this.resetForm();
+        this.closeModal();
+      } catch (error) {
+        // Error al agregar el colaborador o al enviar el correo
+        console.error("Error: ", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un problema durante la operación.',
+        });
+      }
+    },
+  },
+};
+</script>
+
+
+<!-- 
+<script>
+import { db, auth } from '../../../core/services/firebase/firebaseConfig';
+import { collection, addDoc, query, where, getDocs } from 'firebase/firestore'; import Swal from 'sweetalert2';
+
+export default {
+  props: {
+    isOpen: {
+      type: Boolean,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      fullName: '',
+      mail: '',
+      departmentArea: '',
+      positionRole: '',
+      notesOrComments: '',
+    };
+  },
+  methods: {
+    generateToken(length) {
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let token = '';
+      for (let i = 0; i < length; i++) {
+        token += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return token;
+    },
+
+    resetForm() {
+      this.fullName = '';
+      this.mail = '';
+      this.departmentArea = '';
+      this.positionRole = '';
+      this.notesOrComments = '';
+    },
+    closeModal() {
+      this.resetForm();
+      this.$emit('update:isOpen', false);
+    },
+    async submitForm() {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const token = this.generateToken(8);
+
+      if (!this.fullName || !this.mail || !this.departmentArea || !this.positionRole || !this.notesOrComments) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'All fields are required!',
+        });
+        return;
+      }
+
+      if (!emailRegex.test(this.mail)) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Error in the email!',
+        });
+        return;
+      }
+
+      if (this.notesOrComments.length > 200) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Notes or comments must be less than 200 characters!',
+        });
+        return;
+      }
+
+      try {
+        const user = auth.currentUser;
+        const managerId = user.uid;
         const docRef = await addDoc(collection(db, "collaborators"), {
           fullName: this.fullName,
           mail: this.mail,
           departmentArea: this.departmentArea,
           positionRole: this.positionRole,
           notesOrComments: this.notesOrComments,
+          managerId: managerId, // Asegúrate de tener el ID del manager de alguna manera
+          token: token
         });
 
         console.log("Document written with ID: ", docRef.id);
@@ -111,10 +286,17 @@ export default {
             fullName: this.fullName,
             email: this.mail,
             subject: 'Bienvenido al grupo de trabajo',
-            text: `Hola ${this.fullName}, bienvenido al departamento de ${this.departmentArea}. Tu rol será ${this.positionRole}. Notas: ${this.notesOrComments}`,
+            html: `
+      <div style="font-family: Arial, sans-serif; color: #333;">
+        <h2 style="color: #4A90E2;">Bienvenido al grupo de trabajo</h2>
+        <p>Hola ${this.fullName},</p>
+        <p>Bienvenido al departamento de ${this.departmentArea}. Tu rol será ${this.positionRole}.</p>
+        <p>Por favor, <a href="http://www.tu-sitio-web.com/registro?token=${token}" style="color: #4A90E2; text-decoration: none;">haz clic aquí</a> para terminar con tu registro.</p>
+        <p style="font-size: 0.9em; color: #666;">Si tienes alguna pregunta, no dudes en contactarnos.</p>
+      </div>
+    `
           }),
         });
-
 
         if (response.ok) {
           // Correo enviado con éxito
@@ -149,5 +331,6 @@ export default {
 </script>
 
 <style scoped>
-/* Tus estilos aquí */
+
 </style>
+ -->

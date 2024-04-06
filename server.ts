@@ -17,13 +17,13 @@ const transporter = nodemailer.createTransport({
 
 // Ruta de la API para enviar correos electrónicos
 app.post('/send-email', (req, res) => {
-  const { fullName, email, subject, text } = req.body
+  const { fullName, email, subject, html } = req.body
 
   const mailOptions = {
     from: 'mr.monocker@gmail.com', // De nuevo, usa tu correo real aquí
     to: email,
     subject: subject,
-    text: text
+    html: html
   }
 
   transporter.sendMail(mailOptions, (error, info) => {
