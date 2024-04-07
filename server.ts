@@ -1,82 +1,44 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import HomeView from '../views/home/HomeView.vue'
-import TeamView from '../views/team/TeamView.vue'
-import LoginView from '../views/authentication/LoginView.vue'
-import RegisterView from '../views/authentication/RegisterView.vue'
-import Swal from 'sweetalert2'
-import ActivityView from '../views/activity/ActivityView.vue'
-import CalendarView from '@/views/calendar/CalendarView.vue'
+const express = require('express')
+const cors = require('cors')
+const nodemailer = require('nodemailer')
 
-const auth = getAuth()
+const app = express()
+app.use(cors()) // Habilita CORS para todas las rutas
+app.use(express.json()) // Para parsear cuerpos de solicitud en formato JSON
 
-const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: () => import('../views/AboutView.vue')
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: LoginView
-  },
-  {
-    path: '/register',
-    name: 'register',
-    component: RegisterView
-  },
-  {
-    path: '/dashboard',
-    name: 'dashboard',
-    component: HomeView,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/team',
-    name: 'team',
-    component: TeamView,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/activity',
-    name: 'activity',
-    component: ActivityView,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/calendar',
-    name: 'calendar',
-    component: CalendarView,
-    meta: { requiresAuth: true }
-  } 
-  // ...otros paths
-]
-
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes
+// Configuración de nodemailer con tus credenciales
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'mr.monocker@gmail.com', // Debes reemplazarlo con tu correo real
+    pass: 'bppk iqzw pvcg rony' // Debes reemplazarlo con tu contraseña real
+  }
 })
 
-router.beforeEach((to, from, next) => {
-  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
-  const isAuthRoute = to.path === '/login' || to.path === '/register'
+// Ruta de la API para enviar correos electrónicos
+app.post('/send-email', (req, res) => {
+  const { fullName, email, subject, html } = req.body
 
-  onAuthStateChanged(auth, (user) => {
-    if (requiresAuth && !user) {
-      Swal.fire({
-        icon: 'info',
-        title: 'Acceso restringido',
-        text: 'Debes iniciar sesión para acceder a esta página.'
-      }).then(() => {
-        next('/login')
-      })
-    } else if (user && isAuthRoute) {
-      next('/dashboard') // Redirige al dashboard si el usuario está autenticado y trata de acceder a login o register
+  const mailOptions = {
+    from: 'mr.monocker@gmail.com', // De nuevo, usa tu correo real aquí
+    to: email,
+    subject: subject,
+    html: html
+  }
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log('Error al enviar el correo:', error)
+      res.status(500).send('Error al enviar el correo.')
     } else {
-      next()
+      console.log('Correo enviado: ' + info.response)
+      res.status(200).send('Correo enviado con éxito.')
     }
   })
 })
 
-export default router
+// Configura el puerto y inicia el servidor
+const PORT = process.env.PORT || 3000
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en el puerto ${PORT}`)
+})
