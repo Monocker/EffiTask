@@ -11,8 +11,8 @@
             </div>
         </div>
         <ModalComponent :isOpen="showModal" @update:isOpen="showModal = $event" />
-        <CollaboratorModalComponent :isOpen="showModal" :person="selectedPerson" @update:isOpen="showModal = $event"
-            @update="fetchColaboradores" />
+        <CollaboratorModalComponent :isOpen="showModalEdit" :person="selectedPerson"
+            @update:isOpen="showModalEdit = $event" @update="fetchColaboradores" />
     </div>
 </template>
 
@@ -59,6 +59,7 @@ export default {
     data() {
         return {
             showModal: false,
+            showModalEdit: false,
             selectedPerson: null,
 
             navigation: [
@@ -97,7 +98,7 @@ export default {
         },
         handleSelect(person) {
             this.selectedPerson = person;
-            this.showModal = true;
+            this.showModalEdit = true;
         },
     }
 

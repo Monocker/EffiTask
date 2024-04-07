@@ -2,7 +2,7 @@
   <div
     class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex justify-center items-center"
     v-show="isOpen">
-    <div class="relative p-5 w-full max-w-md mx-auto rounded-md bg-white shadow-lg">
+    <div class="relative p-5 w-full max-w-md mx-4 sm:mx-auto rounded-md bg-white shadow-lg">
       <div class="mt-3 text-center">
         <h3 class="text-lg leading-6 font-medium text-gray-900">
           New Team
