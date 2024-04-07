@@ -5,11 +5,14 @@
             <div class="relative z-10 rounded-xl bg-white shadow-xl overflow-hidden my-auto xl:mt-18">
                 <section>
                     <THeaderComponent @open-modal="showModal = true" />
-                    <TListComponent :people="people" />
+                    <!-- <TListComponent :people="people" /> -->
+                    <TListComponent :people="people" @select="handleSelect" />
                 </section>
             </div>
         </div>
         <ModalComponent :isOpen="showModal" @update:isOpen="showModal = $event" />
+        <CollaboratorModalComponent :isOpen="showModal" :person="selectedPerson" @update:isOpen="showModal = $event"
+            @update="fetchColaboradores" />
     </div>
 </template>
 
@@ -29,6 +32,7 @@ import { ref, onMounted } from 'vue';
 
 import { db, auth } from '../../core/services/firebase/firebaseConfig';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import CollaboratorModalComponent from '@/components/team/modal/CollaboratorModalComponent.vue';
 
 let isMenuOpen = ref(false);
 
@@ -49,11 +53,13 @@ export default {
         NavBarComponent,
         THeaderComponent,
         TListComponent,
-        ModalComponent
+        ModalComponent,
+        CollaboratorModalComponent
     },
     data() {
         return {
             showModal: false,
+            selectedPerson: null,
 
             navigation: [
                 { name: 'Dashboard', href: '/dashboard', current: false },
@@ -88,7 +94,11 @@ export default {
                     this.people = colaboradores;
                 });
             }
-        }
+        },
+        handleSelect(person) {
+            this.selectedPerson = person;
+            this.showModal = true;
+        },
     }
 
 };

@@ -1,5 +1,6 @@
 <template>
-    <li class="flex justify-between gap-x-6 py-5">
+    <li class="flex justify-between gap-x-6 py-5 px-5  hover:bg-blue-500 hover:ring-blue-500 hover:shadow-md"
+        @click="$emit('select', person)">
         <div class="flex min-w-0 gap-x-4">
             <img class="h-12 w-12 flex-none rounded-full bg-gray-50" :src="person.imageUrl" alt="" />
             <div class="min-w-0 flex-auto">

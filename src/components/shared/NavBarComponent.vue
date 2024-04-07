@@ -39,15 +39,15 @@
                                     <div class="py-1">
                                         <MenuItem as="template" v-slot="{ active }">
                                         <a :class="{ 'bg-gray-100': active }" href="#"
-                                            class="block px-4 py-2 text-sm text-gray-700">Perfil</a>
+                                            class="block px-4 py-2 text-sm text-gray-700">Your Perfil</a>
                                         </MenuItem>
                                         <MenuItem as="template" v-slot="{ active }">
                                         <a :class="{ 'bg-gray-100': active }" href="#"
-                                            class="block px-4 py-2 text-sm text-gray-700">Configuración</a>
+                                            class="block px-4 py-2 text-sm text-gray-700">Settings</a>
                                         </MenuItem>
                                         <MenuItem as="template" v-slot="{ active }">
-                                        <a :class="{ 'bg-gray-100': active }" href="#"
-                                            class="block px-4 py-2 text-sm text-gray-700">Salir</a>
+                                        <a :class="{ 'bg-gray-100': active }" @click="signOut"
+                                            class="block px-4 py-2 text-sm text-gray-700">Sign out</a>
                                         </MenuItem>
                                     </div>
                                 </MenuItems>
@@ -97,18 +97,12 @@
                         {{ item.name }}
                     </DisclosureButton>
                 </div>
-
-                <!-- <div class="mt-3 space-y-1 px-2">
-                    <DisclosureButton v-for="item in userNavigation" :key="item.name" as="a" :href="item.href"
-                        class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">
-                        {{ item.name }}</DisclosureButton>
-                </div> -->
             </div>
         </DisclosurePanel>
     </Disclosure>
 </template>
 
-<script>/* Antes  */
+<script>
 import { ref } from 'vue';
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline';
@@ -132,10 +126,24 @@ export default defineComponent({
         MenuItem,
         MenuItems
     },
+    methods: {
+        signOut() {
+            logoutUser()
+                .then(() => {
+                    this.$router.push('/login');
+                })
+                .catch((error) => {
+                    console.error('Error al cerrar sesión:', error);
+                });
+        },
+        // ...
+    },
+
     setup() {
         const isOpen = ref(false);
 
         var router = useRouter();
+
 
         const signOut = async () => {
             try {
@@ -146,6 +154,7 @@ export default defineComponent({
 
             }
         };
+
 
         const user = ref({
             name: 'Tom Cook',
@@ -185,6 +194,5 @@ export default defineComponent({
 <style>
 .navbar {
     z-index: 50;
-    /* Ajusta este valor según sea necesario */
 }
 </style>
