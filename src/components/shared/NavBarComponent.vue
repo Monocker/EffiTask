@@ -38,7 +38,7 @@
                                     class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                     <div class="py-1">
                                         <MenuItem as="template" v-slot="{ active }">
-                                        <a :class="{ 'bg-gray-100': active }" href="#"
+                                        <a :class="{ 'bg-gray-100': active }" @click="myAccout"
                                             class="block px-4 py-2 text-sm text-gray-700">Your Perfil</a>
                                         </MenuItem>
                                         <MenuItem as="template" v-slot="{ active }">
@@ -136,6 +136,9 @@ export default defineComponent({
                     console.error('Error al cerrar sesión:', error);
                 });
         },
+        myAccout() {
+            this.$router.push('/account');
+        }
         // ...
     },
 
@@ -149,6 +152,15 @@ export default defineComponent({
             try {
                 logoutUser();
                 router.push('/');
+            } catch (error) {
+                console.error('Error al cerrar sesión:', error);
+
+            }
+        };
+        const myAccout = async () => {
+            try {
+
+                router.push('/account');
             } catch (error) {
                 console.error('Error al cerrar sesión:', error);
 
@@ -171,7 +183,7 @@ export default defineComponent({
         ]);
 
         const userNavigation = ref([
-            { name: 'Your Profile', href: '#' },
+            { name: 'Your Profile', action: myAccout },
             { name: 'Settings', href: '#' },
             { name: 'Sign out', action: signOut }
         ]);
