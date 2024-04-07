@@ -26,7 +26,8 @@
 
                 <div class="flex items-center justify-between">
                     <div class="text-sm">
-                        <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
+                        <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"
+                            @click="openResetPasswordModal">
                             ¿Olvidaste tu contraseña?
                         </a>
                     </div>
@@ -48,6 +49,8 @@
                 </a>
             </p>
         </div>
+        <ResetPasswordModal v-if="isResetPasswordModalOpen" :isResetPasswordOpen="isResetPasswordModalOpen"
+            @closeResetModal="isResetPasswordModalOpen = false" />
     </div>
 </template>
 
@@ -56,9 +59,11 @@ import { ref } from 'vue';
 import Swal from 'sweetalert2';
 import { loginUser } from '../../core/services/authentication/AuthentificationService';
 import router from '../../router';
+import ResetPasswordModal from '../../components/authentication/ResetPasswordModal.vue';
 
 const email = ref('');
 const password = ref('');
+var isResetPasswordModalOpen = ref(false);
 
 const submitForm = async () => {
     try {
@@ -84,6 +89,9 @@ const submitForm = async () => {
 
 const navigateToRegister = () => {
     router.push('/register');
+};
+const openResetPasswordModal = () => {
+    isResetPasswordModalOpen.value = true;
 };
 </script>
 
