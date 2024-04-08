@@ -1,9 +1,9 @@
 <template>
     <div v-if="isOpen"
         class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex justify-center items-center">
-        <div class="relative p-5 w-full max-w-md mx-auto rounded-md bg-white shadow-lg">
+        <div class="relative p-5 w-full max-w-md mx-4 sm:mx-auto rounded-md bg-white shadow-lg">
             <div class="text-center">
-                <h3 class="text-lg font-medium text-gray-900">{{ showModal }}</h3>
+                <h3 class="text-lg font-medium text-gray-900">{{ showModalEdit }}</h3>
 
                 <div class="mt-2">
                     <input v-model="editablePerson.fullName" type="text" placeholder="Nombre Completo"
@@ -56,7 +56,7 @@ export default {
         }
     },
     computed: {
-        showModal() {
+        showModalEdit() {
             return this.isEditable ? 'Editar Colaborador' : 'Información del Colaborador';
         }
     },
