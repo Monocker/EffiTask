@@ -177,14 +177,13 @@ export default defineComponent({
         const navigation = ref([
             { name: 'Dashboard', href: '/dashboard', current: false },
             { name: 'Team', href: '/team', current: false },
-            { name: 'Projects', href: '#', current: false },
+            { name: 'Activity', href: '/activity', current: false },
             { name: 'Calendar', href: '/calendar', current: false },
-            { name: 'Reports', href: '#', current: false }
         ]);
 
         const userNavigation = ref([
             { name: 'Your Profile', action: myAccout },
-            { name: 'Settings', href: '#' },
+            /*  { name: 'Settings', href: '#' }, */
             { name: 'Sign out', action: signOut }
         ]);
 
