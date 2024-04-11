@@ -9,7 +9,8 @@
                 </section>
             </div>
         </div>
-        <ModalComponent :isOpen="showModal" @update:isOpen="showModal = $event" :collaborators="collaborators" />
+        <ModalComponent :isOpen="showModal" @update:isOpen="showModal = $event" :collaborators="collaborators"
+            :user="user" />
     </div>
 </template>
 
@@ -34,11 +35,15 @@ export default {
             showModal: false,
             projects: [],
             collaborators: [],
+            user: {},
+            managerId: '', // Añade esta propiedad para almacenar el ID del manager
         };
     },
     created() {
         this.fetchProjects();
         this.fetchCollaborators();
+        this.user = auth.currentUser; // Obtener el usuario actual al inicio
+        this.setManagerId();
     },
     methods: {
         fetchProjects() {
@@ -71,70 +76,12 @@ export default {
                 });
             }
         },
+        setManagerId() {
+            const user = auth.currentUser;
+            if (user) {
+                this.managerId = user.uid;
+            }
+        },
     },
 };
 </script>
-
-
-<!-- <template>
-    <div class="min-h-full">
-        <NavBarComponent />
-        <div class="lg:col-span-5 xl:col-span-6 flex flex-col">
-            <div class="relative z-10 rounded-xl bg-white shadow-xl overflow-hidden my-auto xl:mt-18">
-                <section>
-                    <HeaderComponent @open-modal="showModal = true" />
-
-                    <CardsComponent />
-                </section>
-            </div>
-        </div>
-        <ModalComponent :isOpen="showModal" @update:isOpen="showModal = $event" />
-    </div>
-</template>
-
-<style>
-@media (max-width: 768px) {
-    .hidden {
-        display: none;
-    }
-}
-</style>
-
-<script>
-
-import NavBarComponent from '../../components/shared/NavBarComponent.vue'
-import CardsComponent from '../../components/home/dashboard/cards/CardsComponent.vue';
-import HeaderComponent from '../../components/home/dashboard/HeaderComponent.vue'
-import ModalComponent from '../../components/home/dashboard/modal/ModalComponent.vue'
-
-
-export default {
-    components: {
-        NavBarComponent,
-        HeaderComponent,
-        CardsComponent,
-        ModalComponent
-    },
-    data() {
-        return {
-            showModal: false,
-            user: {
-                name: 'Tom Cook',
-                email: 'tom@example.com',
-                imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-            },
-            navigation: [
-                { name: 'Dashboard', href: '/dashboard', current: false },
-                { name: 'Team', href: '/team', current: false },
-                // más elementos de navegación...
-            ],
-            userNavigation: [
-                { name: 'Your Profile', href: '#' },
-                { name: 'Settings', href: '#' },
-                { name: 'Sign out', href: '#' },
-            ],
-            // cualquier otra data que necesites
-        }
-    },
-};
-</script> -->
