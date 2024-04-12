@@ -8,6 +8,7 @@ import Swal from 'sweetalert2'
 import ActivityView from '../views/activity/ActivityView.vue'
 import CalendarView from '@/views/calendar/CalendarView.vue'
 import AccountView from '../views/account/AccountView.vue'
+import ValidationView from '../views/authentication/ValidationView.vue'
 
 const auth = getAuth()
 
@@ -26,6 +27,11 @@ const routes = [
     path: '/register',
     name: 'register',
     component: RegisterView
+  },
+  {
+    path: '/validate',
+    name: 'validate',
+    component: ValidationView
   },
   {
     path: '/dashboard',
