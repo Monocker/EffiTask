@@ -34,6 +34,66 @@
     <!-- End Hero -->
 
     <!--  <features-section-component /> -->
+    <section class="text-gray-600 body-font">
+      <div class="container px-5 py-24 mx-auto">
+        <!-- Título y subtítulo -->
+        <div class="text-center mb-20">
+          <h1 class="sm:text-3xl text-2xl font-medium title-font text-gray-900 mb-4">
+            Our Features you can get
+          </h1>
+          <p class="text-base leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto">
+            We offer a variety of interesting features that you can help increase your productivity at work and manage
+            your projects easily.
+          </p>
+          <div class="flex mt-6 justify-center">
+            <div class="inline-flex rounded-md shadow-md">
+              <button
+                class="inline-flex text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg">
+                Get Started
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjetas -->
+        <div class="flex flex-wrap -m-4">
+          <!-- Primer card -->
+          <div class="p-4 md:w-1/3">
+            <div class="flex flex-col h-full bg-white p-8 rounded-xl shadow-lg overflow-hidden">
+              <img class="rounded-xl mb-3 mx-auto" src="../assets/img/card.JPG" alt="Collaboration Team">
+              <div class="flex-grow bg-blue-100 bg-opacity-50 p-6 rounded-xl">
+                <h2 class="text-gray-900 text-lg title-font font-medium mb-2">Collaboration Teams</h2>
+                <p class="leading-relaxed text-base">Here you can handle projects together with your team virtually.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Segundo card -->
+          <div class="p-4 md:w-1/3">
+            <div class="flex flex-col h-full bg-white p-8 rounded-xl shadow-lg overflow-hidden">
+              <img class="rounded-xl mb-3 mx-auto" src="../assets/img/card.JPG" alt="Cloud Storage">
+              <div class="flex-grow bg-green-100 bg-opacity-50 p-6 rounded-xl">
+                <h2 class="text-gray-900 text-lg title-font font-medium mb-2">Cloud Storage</h2>
+                <p class="leading-relaxed text-base">No need to worry about storage because we provide storage up to 2
+                  TB.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tercer card -->
+          <div class="p-4 md:w-1/3">
+            <div class="flex flex-col h-full bg-white p-8 rounded-xl shadow-lg overflow-hidden">
+              <img class="rounded-xl mb-3 mx-auto" src="../assets/img/card.JPG" alt="Daily Analytics">
+              <div class="flex-grow bg-purple-100 bg-opacity-50 p-6 rounded-xl">
+                <h2 class="text-gray-900 text-lg title-font font-medium mb-2">Daily Analytics</h2>
+                <p class="leading-relaxed text-base">We always provide useful information to make it easier for you
+                  every day.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- End Feature-Section -->
 
