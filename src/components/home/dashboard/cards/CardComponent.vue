@@ -1,14 +1,13 @@
 <template>
-    <li
-        class="group cursor-pointer rounded-md p-3 bg-white ring-1 ring-gray-200 shadow-sm hover:bg-blue-500 hover:ring-blue-500 hover:shadow-md">
+    <li class="group cursor-pointer rounded-md p-3 bg-white ring-1 ring-gray-200 shadow-sm hover:bg-blue-500 hover:ring-blue-500 hover:shadow-md"
+        @click="$emit('select', task)">
         <dl class="grid sm:block lg:grid xl:block grid-cols-2 grid-rows-2 items-center">
             <div>
-                <dt class="sr-only">Title</dt>
-                <dd class="font-semibold text-gray-900 group-hover:text-white">{{ title }}</dd>
+                <dd class="font-semibold text-gray-900 group-hover:text-white">{{ task.projectName }}</dd>
             </div>
             <div>
                 <dt class="sr-only">Category</dt>
-                <dd class="group-hover:text-blue-200">{{ category }}</dd>
+                <dd class="group-hover:text-blue-200">{{ task.description }}</dd>
             </div>
             <div class="col-start-2 row-start-1 row-end-3">
                 <dt class="sr-only">Users</dt>
@@ -24,8 +23,13 @@
 <script>
 export default {
     props: {
-        title: String,
-        category: String
+        task: {
+            type: Object,
+            default: () => ({})
+        },
+    },
+    mounted() {
+        console.log('Task en CardComponent:', this.task);
     }
 };
 </script>

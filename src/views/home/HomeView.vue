@@ -5,7 +5,7 @@
             <div class="relative z-10 rounded-xl bg-white shadow-xl overflow-hidden my-auto xl:mt-18">
                 <section>
                     <HeaderComponent @open-modal="showModal = true" />
-                    <CardsComponent :projects="projects" />
+                    <CardsComponent :tasks="tasks" />
                 </section>
             </div>
         </div>
@@ -19,9 +19,10 @@ import NavBarComponent from '../../components/shared/NavBarComponent.vue';
 import HeaderComponent from '../../components/home/dashboard/HeaderComponent.vue';
 import CardsComponent from '../../components/home/dashboard/cards/CardsComponent.vue';
 import ModalComponent from '../../components/home/dashboard/modal/ModalComponent.vue';
-import { ref, onMounted, watch } from 'vue';
 import { db, auth } from '../../core/services/firebase/firebaseConfig';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
+
 
 export default {
     components: {
@@ -33,7 +34,7 @@ export default {
     data() {
         return {
             showModal: false,
-            projects: [],
+            tasks: [], // Usar tasks en lugar de task
             collaborators: [],
             user: {},
             managerId: '', // Añade esta propiedad para almacenar el ID del manager
@@ -41,11 +42,13 @@ export default {
     },
     created() {
         this.fetchProjects();
+        this.fetchTasks();
         this.fetchCollaborators();
         this.user = auth.currentUser; // Obtener el usuario actual al inicio
         this.setManagerId();
     },
     methods: {
+
         fetchProjects() {
             const user = auth.currentUser;
             if (user) {
@@ -61,6 +64,45 @@ export default {
                 });
             }
         },
+        async fetchTasks() {
+            const user = auth.currentUser;
+            if (user) {
+                const userId = user.uid;
+
+                try {
+                    const userDocRef = doc(db, 'users', userId);
+                    const userDocSnap = await getDoc(userDocRef);
+
+                    if (userDocSnap.exists()) {
+                        const userRole = userDocSnap.data().role;
+
+                        let q;
+                        if (userRole === 'manager') {
+                            q = query(collection(db, 'tasks'), where('idManager', '==', userId));
+                        } else {
+                            q = query(collection(db, 'tasks'), where('idCollaborator', '==', userId));
+                        }
+
+                        onSnapshot(q, (querySnapshot) => {
+                            const tasks = [];
+                            querySnapshot.forEach((doc) => {
+                                tasks.push({ id: doc.id, ...doc.data() });
+                            });
+                            this.tasks = tasks;
+                        }, (error) => {
+                            console.error("Error al obtener las tareas: ", error);
+                        });
+                    } else {
+                        console.log("No se encontraron datos del usuario.");
+                    }
+                } catch (error) {
+                    console.error("Error al obtener el documento del usuario: ", error);
+                }
+            }
+        },
+
+
+
         fetchCollaborators() {
             const user = auth.currentUser;
             if (user) {
