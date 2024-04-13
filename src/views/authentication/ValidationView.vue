@@ -20,6 +20,20 @@
                         placeholder="Correo electrónico">
                 </div>
                 <div>
+                    <label for="password" class="sr-only">Contraseña</label>
+                    <input v-model="password" id="password" name="password" type="password" required
+                        class="appearance-none rounded-md relative block w-full px-3 py-3 mb-4 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        placeholder="Contraseña">
+                </div>
+                <div>
+                    <label for="passwordConfirmation" class="sr-only">Repetir Contraseña</label>
+                    <input v-model="passwordConfirmation" id="passwordConfirmation" name="passwordConfirmation"
+                        type="password" required
+                        class="appearance-none rounded-md relative block w-full px-3 py-3 mb-4 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        placeholder="Repetir Contraseña">
+                </div>
+
+                <div>
                     <button type="submit"
                         class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         Validar
@@ -31,24 +45,51 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { getDocs, collection, query, where } from 'firebase/firestore';
 import { db } from '../../core/services/firebase/firebaseConfig';
 import Swal from 'sweetalert2';
 import router from '../../router';
+import { registerCollaborator } from '../../core/services/authentication/AuthentificationService';
 
 const token = ref('');
 const email = ref('');
+const password = ref('');
+const passwordConfirmation = ref('');
+
+
+onMounted(() => {
+    const routeToken = router.currentRoute.value.query.token;
+    token.value = Array.isArray(routeToken) ? routeToken.join(',') : routeToken;
+});
 
 const validateEmail = async () => {
     try {
+        if (!email.value || !token.value || !password.value || !passwordConfirmation.value) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Todos los campos son obligatorios.',
+            });
+            return;
+        }
+
+        if (password.value !== passwordConfirmation.value) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Las contraseñas no coinciden.',
+            });
+            return;
+        }
+
         const collaboratorsRef = collection(db, 'collaborators');
         const q = query(collaboratorsRef, where('mail', '==', email.value), where('token', '==', token.value));
         const querySnapshot = await getDocs(q);
 
         if (!querySnapshot.empty) {
             const userDoc = querySnapshot.docs[0];
-            /* falta hacer la inyeccion al docuemnto */
+            await registerCollaborator(email.value, password.value);
             await router.push('/login');
         } else {
             Swal.fire({
@@ -66,4 +107,5 @@ const validateEmail = async () => {
         });
     }
 };
+
 </script>

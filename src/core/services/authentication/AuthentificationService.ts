@@ -31,9 +31,27 @@ const registerUser = async (
   })
 }
 
+const registerCollaborator = async (email: string, password: string) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+    const user = userCredential.user
+
+    console.log('user:', user)
+
+    await setDoc(doc(db, 'users', user.uid), {
+      email: email,
+      role: 'employee',
+      createdAt: new Date()
+    })
+  } catch (error) {
+    console.error(error)
+    throw error // Puedes manejar el error según sea necesario
+  }
+}
+
 // Cerrar sesión
 const logoutUser = async () => {
   await signOut(auth)
 }
 
-export { loginUser, registerUser, logoutUser }
+export { loginUser, registerUser, logoutUser, registerCollaborator }
