@@ -166,7 +166,7 @@ export default {
           <h1 style="color: #4A90E2; margin-bottom: 25px;">Verifica Tu Email</h1>
           <p style="margin-bottom: 25px;">Gracias por registrarte en EffiTask. Estamos felices de tenerte con nosotros.</p>
           <p style="margin-bottom: 25px;">Por favor, toma un segundo para asegurarte que tenemos tu dirección de correo electrónico correcta.</p>
-          <a href="http://localhost:5173/validation?token=${token}" style="background-color: #4A90E2; color: white; padding: 15px 30px; border-radius: 5px; text-decoration: none; display: inline-block; font-weight: bold;">Confirmar tu dirección de correo</a>
+          <a href="http://localhost:5173/validate?token=${token}" style="background-color: #4A90E2; color: white; padding: 15px 30px; border-radius: 5px; text-decoration: none; display: inline-block; font-weight: bold;">Confirmar tu dirección de correo</a>
           <p style="font-size: 0.9em; color: #666; margin-top: 25px;">Si no te registraste en EffiTask, por favor ignora este mensaje.</p>
           <hr style="margin-top: 30px; border: none; border-top: 1px solid #ECECEC;" />
           <div style="font-size: 0.8em; color: #666; margin-top: 20px;">

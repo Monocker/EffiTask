@@ -108,4 +108,5 @@ const validateEmail = async () => {
     }
 };
 
+
 </script>
