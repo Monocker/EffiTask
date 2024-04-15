@@ -148,6 +148,20 @@ export default {
           return;
         }
 
+        // Si el correo se envió con éxito, agrega el colaborador a la base de datos
+        const docRef = await addDoc(collaboratorsRef, {
+          fullName: this.fullName,
+          mail: this.mail,
+          departmentArea: this.departmentAreaSelect,
+          positionRole: this.positionRole,
+          notesOrComments: this.notesOrComments,
+          managerId: managerId,
+          token: token
+        });
+
+        const newCollaboratorId = docRef.id;
+        console.log("Document written with ID: ", docRef.id);
+
         // Intenta enviar el correo electrónico primero
         const response = await fetch('http://localhost:3000/send-email', {
           method: 'POST',
@@ -166,7 +180,7 @@ export default {
           <h1 style="color: #4A90E2; margin-bottom: 25px;">Verifica Tu Email</h1>
           <p style="margin-bottom: 25px;">Gracias por registrarte en EffiTask. Estamos felices de tenerte con nosotros.</p>
           <p style="margin-bottom: 25px;">Por favor, toma un segundo para asegurarte que tenemos tu dirección de correo electrónico correcta.</p>
-          <a href="http://localhost:5173/validate?token=${token}" style="background-color: #4A90E2; color: white; padding: 15px 30px; border-radius: 5px; text-decoration: none; display: inline-block; font-weight: bold;">Confirmar tu dirección de correo</a>
+          <a href="http://localhost:5173/validate?token=${token}&collaboratorId=${newCollaboratorId}" style="background-color: #4A90E2; color: white; padding: 15px 30px; border-radius: 5px; text-decoration: none; display: inline-block; font-weight: bold;">Confirmar tu dirección de correo</a>
           <p style="font-size: 0.9em; color: #666; margin-top: 25px;">Si no te registraste en EffiTask, por favor ignora este mensaje.</p>
           <hr style="margin-top: 30px; border: none; border-top: 1px solid #ECECEC;" />
           <div style="font-size: 0.8em; color: #666; margin-top: 20px;">
@@ -188,18 +202,7 @@ export default {
           return;
         }
 
-        // Si el correo se envió con éxito, agrega el colaborador a la base de datos
-        const docRef = await addDoc(collaboratorsRef, {
-          fullName: this.fullName,
-          mail: this.mail,
-          departmentArea: this.departmentAreaSelect,
-          positionRole: this.positionRole,
-          notesOrComments: this.notesOrComments,
-          managerId: managerId,
-          token: token
-        });
 
-        console.log("Document written with ID: ", docRef.id);
 
         // Correo enviado con éxito
         Swal.fire({
