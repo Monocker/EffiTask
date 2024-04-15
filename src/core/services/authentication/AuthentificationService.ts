@@ -31,7 +31,26 @@ const registerUser = async (
   })
 }
 
-const registerCollaborator = async (email: string, password: string) => {
+const registerCollaborator = async (email: string, password: string, collaboratorId: string) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+    const user = userCredential.user
+
+    console.log('user:', user)
+
+    await setDoc(doc(db, 'users', user.uid), {
+      email: email,
+      role: 'employee',
+      collaboratorId: collaboratorId, // Aquí asignamos el ID del colaborador
+      createdAt: new Date()
+    })
+  } catch (error) {
+    console.error(error)
+    throw error // Puedes manejar el error según sea necesario
+  }
+}
+
+/* const registerCollaborator = async (email: string, password: string) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password)
     const user = userCredential.user
@@ -45,9 +64,9 @@ const registerCollaborator = async (email: string, password: string) => {
     })
   } catch (error) {
     console.error(error)
-    throw error // Puedes manejar el error según sea necesario
+    throw error 
   }
-}
+} */
 
 // Cerrar sesión
 const logoutUser = async () => {
