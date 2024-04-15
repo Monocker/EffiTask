@@ -56,14 +56,63 @@ const token = ref('');
 const email = ref('');
 const password = ref('');
 const passwordConfirmation = ref('');
-
+const collaboratorId = ref('');
 
 onMounted(() => {
     const routeToken = router.currentRoute.value.query.token;
     token.value = Array.isArray(routeToken) ? routeToken.join(',') : routeToken;
+    collaboratorId.value = router.currentRoute.value.query.collaboratorId;
 });
 
 const validateEmail = async () => {
+    try {
+        if (!email.value || !token.value || !password.value || !passwordConfirmation.value) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Todos los campos son obligatorios.',
+            });
+            return;
+        }
+
+        if (password.value !== passwordConfirmation.value) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Las contraseñas no coinciden.',
+            });
+            return;
+        }
+
+        const collaboratorsRef = collection(db, 'collaborators');
+        const q = query(collaboratorsRef, where('mail', '==', email.value), where('token', '==', token.value));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+            const userDoc = querySnapshot.docs[0];
+            const collaboratorId = userDoc.id;
+
+            await registerCollaborator(email.value, password.value, collaboratorId);
+            await router.push('/login');
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se encontró ningún colaborador con el correo y token proporcionados.',
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un error al validar el correo.',
+        });
+    }
+};
+
+
+/* const validateEmail = async () => {
     try {
         if (!email.value || !token.value || !password.value || !passwordConfirmation.value) {
             Swal.fire({
@@ -106,7 +155,7 @@ const validateEmail = async () => {
             text: 'Hubo un error al validar el correo.',
         });
     }
-};
+}; */
 
 
 </script>
