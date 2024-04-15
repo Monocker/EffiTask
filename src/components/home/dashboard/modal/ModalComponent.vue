@@ -92,9 +92,11 @@ export default {
                         icon: 'success',
                         title: 'Success!',
                         text: 'The project has been created successfully!',
+
+                    }).then(() => {
+                        // Recargar la página
+                        window.location.reload();
                     });
-                    this.resetForm();
-                    this.closeModal();
                 } catch (error) {
                     console.error('Error adding document: ', error);
                     Swal.fire({
