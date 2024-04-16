@@ -2,7 +2,7 @@
     <header class="rounded-t-xl space-y-4 p-4 sm:px-8 sm:py-6 lg:p-4 xl:px-8 xl:py-6">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-gray-900">Projects</h2>
-            <div @click="$emit('open-modal')"
+            <div v-if="role === 'manager'" @click="$emit('open-modal')"
                 class="group flex items-center rounded-md bg-blue-500 text-white text-sm font-medium pl-2 pr-3 py-2 cursor-pointer shadow-sm hover:bg-blue-400">
                 <svg width="20" height="20" fill="currentColor" class="mr-2">
                     <path
@@ -25,6 +25,17 @@
 </template>
 
 <script>
+
+export default{
+    props: {
+        role: String
+    },
+    created() {
+        console.log('Role received desde header:', this.role);
+        this.role;
+    }
+
+}
 </script>
 
 <style></style>

@@ -1,12 +1,10 @@
-
-
- <template>
+<template>
     <div class="min-h-full">
         <NavBarComponent />
         <div class="lg:col-span-5 xl:col-span-6 flex flex-col">
             <div class="relative z-10 rounded-xl bg-white shadow-xl overflow-hidden my-auto xl:mt-18">
                 <section>
-                    <HeaderComponent @open-modal="showModal = true" />
+                    <HeaderComponent @open-modal="showModal = true" :role="role" />
                     <CardsComponent :tasks="tasks" @select="selectTask" />
                 </section>
             </div>
@@ -46,11 +44,12 @@ export default {
         };
     },
     created() {
+        this.fetchRole();
         this.fetchTasks();
         this.fetchCollaborators();
         this.user = auth.currentUser;
         this.setManagerId();
-        this.fetchRole();
+        
     },
     methods: {
 
