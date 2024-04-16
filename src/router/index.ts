@@ -71,13 +71,14 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes
 })
-
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
   const isAuthRoute = to.path === '/login' || to.path === '/register'
 
   onAuthStateChanged(auth, (user) => {
-    if (requiresAuth && !user) {
+    if (!to.matched.length) {
+      next('/') // Redirige a la ruta principal si la ruta no existe
+    } else if (requiresAuth && !user) {
       Swal.fire({
         icon: 'info',
         title: 'Acceso restringido',
@@ -92,5 +93,6 @@ router.beforeEach((to, from, next) => {
     }
   })
 })
+
 
 export default router
