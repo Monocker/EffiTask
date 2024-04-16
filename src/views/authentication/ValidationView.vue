@@ -64,7 +64,7 @@ onMounted(() => {
     collaboratorId.value = router.currentRoute.value.query.collaboratorId;
 });
 
-const validateEmail = async () => {
+const validateEmail = async () => { 
     try {
         if (!email.value || !token.value || !password.value || !passwordConfirmation.value) {
             Swal.fire({

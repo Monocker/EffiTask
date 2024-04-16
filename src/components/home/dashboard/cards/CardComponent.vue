@@ -7,18 +7,20 @@
             </div>
             <div>
                 <dt class="sr-only">Category</dt>
-                <dd class="group-hover:text-blue-200">{{ task.description }}</dd>
+                <dd class="group-hover:text-blue-200">{{ shortenedDescription }}</dd>
             </div>
             <div class="col-start-2 row-start-1 row-end-3">
                 <dt class="sr-only">Users</dt>
                 <dd class="flex justify-end -space-x-1.5">
-                    <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=facearea&facepad=2&w=48&h=48&q=80"
-                        alt="" class="w-6 h-6 rounded-full bg-gray-100 ring-2 ring-white">
+                    <!-- <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=facearea&facepad=2&w=48&h=48&q=80"
+                        alt="" class="w-6 h-6 rounded-full bg-gray-100 ring-2 ring-white"> -->
+                        <i class="material-icons ">account_circle</i>
                 </dd>
             </div>
         </dl>
     </li>
 </template>
+
 
 <script>
 export default {
@@ -28,10 +30,20 @@ export default {
             default: () => ({})
         },
     },
+    computed: {
+        shortenedDescription() {
+            if (this.task.description.length > 30) {
+                return this.task.description.slice(0, 40) + '...';
+            } else {
+                return this.task.description;
+            }
+        }
+    },
     mounted() {
         console.log('Task en CardComponent:', this.task);
     }
 };
 </script>
+
 
 <style></style>

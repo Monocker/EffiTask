@@ -6,17 +6,25 @@
         <div class="md:pr-14">
           <div class="flex items-center">
             <h2 class="flex-auto font-semibold text-gray-900">{{ format(firstDayCurrentMonth, 'MMMM yyyy') }}</h2>
-            <button type="button" @click="previousMonth" class="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500">
+            <button type="button" @click="previousMonth"
+              class="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500">
               <span class="sr-only">Previous month</span>
               <ChevronLeftIcon class="w-5 h-5" aria-hidden="true" />
             </button>
-            <button @click="nextMonth" type="button" class="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500">
+            <button @click="nextMonth" type="button"
+              class="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500">
               <span class="sr-only">Next month</span>
               <ChevronRightIcon class="w-5 h-5" aria-hidden="true" />
             </button>
           </div>
           <div class="grid grid-cols-7 mt-10 text-xs leading-6 text-center text-gray-500">
-            <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
+            <div>S</div>
+            <div>M</div>
+            <div>T</div>
+            <div>W</div>
+            <div>T</div>
+            <div>F</div>
+            <div>S</div>
           </div>
           <div class="grid grid-cols-7 mt-2 text-sm">
             <template v-for="(day, dayIdx) in days" :key="day.toString()">
@@ -25,7 +33,8 @@
                   <time :dateTime="format(day, 'yyyy-MM-dd')">{{ day.getDate() }}</time>
                 </button>
                 <div class="w-1 h-1 mx-auto mt-1">
-                  <div v-if="meetings.some(meeting => isSameDay(parseISO(meeting.startDatetime), day))" class="w-1 h-1 rounded-full bg-sky-500"></div>
+                  <div v-if="meetings.some(meeting => isSameDay(parseISO(meeting.startDatetime), day))"
+                    class="w-1 h-1 rounded-full bg-sky-500"></div>
                 </div>
                 <!-- <div class="w-1 h-1 mx-auto mt-1">
                   <div v-if="meetings.some(meeting => isSameDay(parseISO(meeting.endDateTime), day))" class="w-1 h-1 rounded-full bg-sky-500"></div>
@@ -35,19 +44,22 @@
           </div>
         </div>
         <section class="mt-12 md:mt-0 md:pl-14">
-          <h2 class="font-semibold text-gray-900">Schedule for 
+          <h2 class="font-semibold text-gray-900">Schedule for
             <time :dateTime="format(selectedDay, 'yyyy-MM-dd')">
               {{ format(selectedDay, 'MMM dd, yyyy') }}
             </time>
           </h2>
           <ol class="mt-4 space-y-1 text-sm leading-6 text-gray-500">
             <template v-if="selectedDayMeetings.length > 0">
-              <li v-for="meeting in selectedDayMeetings" :key="meeting.id" class="flex items-center px-4 py-2 space-x-4 group rounded-xl focus-within:bg-gray-100 hover:bg-gray-100">
-                <img :src="meeting.imageUrl" alt="" class="flex-none w-10 h-10 rounded-full" />
+              <li v-for="meeting in selectedDayMeetings" :key="meeting.id"
+                class="flex items-center px-4 py-2 space-x-4 group rounded-xl focus-within:bg-gray-100 hover:bg-gray-100">
+                <!-- <img :src="meeting.imageUrl" alt="" class="flex-none w-10 h-10 rounded-full" /> -->
+                <i class="material-icons">account_circle</i>
                 <div class="flex-auto">
                   <p class="text-gray-900">{{ meeting.name }}</p>
                   <p class="mt-0.5">
-                    <time :dateTime="meeting.startDatetime">{{ format(parseISO(meeting.startDatetime), 'h:mm a') }}</time> - 
+                    <time :dateTime="meeting.startDatetime">{{ format(parseISO(meeting.startDatetime), 'h:mm a')
+                      }}</time> -
                     <time :dateTime="meeting.endDatetime">{{ format(parseISO(meeting.endDatetime), 'h:mm a') }}</time>
                   </p>
                 </div>
@@ -63,10 +75,13 @@
 
 <script>
 import { ref, computed } from 'vue';
-import { format ,parseISO, isSameDay, addMonths, startOfToday, eachDayOfInterval, endOfMonth, getDay, isToday } from 'date-fns';
+import { format, parseISO, isSameDay, addMonths, startOfToday, eachDayOfInterval, endOfMonth, getDay, isToday } from 'date-fns';
 import ChevronLeftIcon from '@heroicons/vue/24/solid/ChevronLeftIcon';
 import ChevronRightIcon from '@heroicons/vue/24/solid/ChevronRightIcon';
 import NavBarComponent from '../../components/shared/NavBarComponent.vue'
+
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db, auth } from '../../core/services/firebase/firebaseConfig';
 
 export default {
   components: {
@@ -86,49 +101,29 @@ export default {
         return isSameDay(startDateTime, selectedDay.value);
       });
     });
+
+    // Obtener las tareas de Firestore
+    const tasks = ref([]);
+    const fetchTasks = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const q = query(collection(db, 'tasks'), where('idManager', '==', user.uid));
+        const querySnapshot = await getDocs(q);
+        tasks.value = querySnapshot.docs.map(doc => doc.data());
+      }
+    };
+
+    fetchTasks();
     // Sample meetings data, should be fetched or computed based on real data
-    const meetings = ref([
-    {
-    id: 1,
-    name: 'Leslie Alexander',
-    imageUrl:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    startDatetime: '2024-05-11T13:00',
-    endDatetime: '2024-05-11T14:30',
-  },
-  {
-    id: 2,
-    name: 'Michael Foster',
-    imageUrl:
-      'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    startDatetime: '2024-05-20T09:00',
-    endDatetime: '2024-05-20T11:30',
-  },
-  {
-    id: 3,
-    name: 'Dries Vincent',
-    imageUrl:
-      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    startDatetime: '2024-05-20T17:00',
-    endDatetime: '2024-05-20T18:30',
-  },
-  {
-    id: 4,
-    name: 'Leslie Alexander',
-    imageUrl:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    startDatetime: '2024-06-09T13:00',
-    endDatetime: '2024-06-09T14:30',
-  },
-  {
-    id: 5,
-    name: 'Michael Foster',
-    imageUrl:
-      'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    startDatetime: '2024-05-13T14:00',
-    endDatetime: '2024-05-13T14:30',
-  },
-    ]);
+    const meetings = computed(() => {
+      return tasks.value.map(task => ({
+        id: task.id,
+        name: task.projectName,
+        imageUrl: 'account_circle', // Debes obtener una imagen de alguna manera
+        startDatetime: `${task.startDate}T${task.startTime}`,
+        endDatetime: `${task.endDate}T${task.endTime}`,
+      }));
+    });
 
     // Compute the first day of the current month
     const firstDayCurrentMonth = computed(() => {
@@ -188,7 +183,7 @@ export default {
       currentMonth.value = addMonths(currentMonth.value, 1);
     };
 
-    
+
 
     return {
       currentMonth,
