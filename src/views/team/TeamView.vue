@@ -4,7 +4,7 @@
         <div class="lg:col-span-5 xl:col-span-6 flex flex-col">
             <div class="relative z-10 rounded-xl bg-white shadow-xl overflow-hidden my-auto xl:mt-18">
                 <section>
-                    <THeaderComponent @open-modal="showModal = true" />
+                    <THeaderComponent @open-modal="showModal = true" :role="role" />
                     <TListComponent :people="people" @select="handleSelect" />
                 </section>
             </div>
@@ -25,6 +25,7 @@ import { ref, onMounted } from 'vue';
 
 import { db, auth } from '../../core/services/firebase/firebaseConfig';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import CollaboratorModalComponent from '@/components/team/modal/CollaboratorModalComponent.vue';
 
 let isMenuOpen = ref(false);
@@ -60,15 +61,28 @@ export default {
                 { name: 'Settings', href: '#' },
                 { name: 'Sign out', href: '#' },
             ],
-            people: []
+            people: [],
+            role: '',
         }
     },
 
     created() {
+        this.fetchRole();
         this.fetchColaboradores();
+       
     },
 
     methods: {
+        async fetchRole() {
+            const user = auth.currentUser;
+            const userId = user.uid;
+
+            const userDocRef = doc(db, 'users', userId);
+            const userDocSnap = await getDoc(userDocRef);
+            const userRole = userDocSnap.data().role;
+            console.log('User role desde fetchRole:', userRole);
+            this.role = userRole;
+        },
         fetchColaboradores() {
             const user = auth.currentUser;
             if (user) {
