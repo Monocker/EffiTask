@@ -105,8 +105,12 @@ export default {
             try {
                 const taskRef = doc(db, 'tasks', this.editableTask.id);
                 await updateDoc(taskRef, {
-                    title: this.editableTask.title,
+                    projectName: this.editableTask.projectName,
                     description: this.editableTask.description,
+                    startDate: this.editableTask.startDate,
+                    startTime: this.editableTask.startTime,
+                    endDate: this.editableTask.endDate,
+                    endTime: this.editableTask.endTime,
                 });
                 Swal.fire({
                     icon: 'success',
