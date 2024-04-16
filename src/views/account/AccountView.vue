@@ -13,10 +13,10 @@
                         <div class="space-y-8 divide-y divide-gray-200 sm:space-y-5">
                             <div>
                                 <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
-                                    <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center">
+                                    <div v-if="role=='manager'" class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center">
                                         <label for="company-name"
                                             class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                                            Company Name
+                                            Name
                                         </label>
                                         <div class="mt-1 sm:mt-0 sm:col-span-2">
                                             <input type="text" name="company-name" id="company-name"
@@ -25,9 +25,22 @@
                                                 class="max-w-xl block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg border-gray-300 rounded-md">
                                         </div>
                                     </div>
+                                    <div v-else class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center">
+                                        <label for="company-name"
+                                            class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                                            Name
+                                        </label>
+                                        <div class="mt-1 sm:mt-0 sm:col-span-2">
+                                            <input type="text" name="company-name" id="company-name"
+                                                v-model="user.fullName" autocomplete="given-name"
+                                                :disabled="!isEditable"
+                                                class="max-w-xl block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg border-gray-300 rounded-md">
+                                        </div>
+                                    </div>
+                                    
 
                                     <!-- More input fields here -->
-                                    <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center">
+                                    <div v-if="role=='manager'" class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center">
                                         <label for="company-name"
                                             class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                                             Company Name
@@ -47,7 +60,7 @@
                         </div>
 
 
-                        <div class="pt-5">
+                        <div v-if="role=='manager'"  class="pt-5">
                             <div class="flex justify-end">
                                 <button v-if="isEditable" @click="toggleEditMode" type="button"
                                     class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -65,7 +78,7 @@
                         </div>
 
 
-                        <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
+                        <div v-if="role=='manager'" class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
 
                             <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center">
                                 <label for="department"
@@ -100,19 +113,6 @@
                                     </li>
                                 </ul>
                             </div>
-
-                            <!--  <div class="mt-1 sm:mt-0 sm:col-span-2">
-                                <ul>
-                                    <li v-for="(dept, index) in user.departments" :key="index"
-                                        class="flex items-center space-x-2">
-                                        <span>{{ dept }}</span>
-                                        <button @click="removeDepartment(index)" type="button"
-                                            class="inline-flex justify-center py-1 px-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700">
-                                            x
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div> -->
                         </div>
 
 
@@ -128,7 +128,7 @@
 import { ref, onMounted } from 'vue';
 import { getAuth } from 'firebase/auth';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db } from '../../core/services/firebase/firebaseConfig';
+import { db, auth } from '../../core/services/firebase/firebaseConfig';
 import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
 import NavBarComponent from '../../components/shared/NavBarComponent.vue';
@@ -136,6 +136,26 @@ import NavBarComponent from '../../components/shared/NavBarComponent.vue';
 export default {
     components: {
         NavBarComponent,
+    },
+    data(){
+        return{
+            role:''
+        }
+    },
+    created(){
+        this.fetchRole();
+    },
+    methods:{
+        async fetchRole() {
+    const user = auth.currentUser;
+    const userId = user.uid;
+    
+    const userDocRef = doc(db, 'users', userId);
+    const userDocSnap = await getDoc(userDocRef);
+    const userRole = userDocSnap.data().role;
+    console.log('User role desde fetchRole:', userRole); 
+    this.role = userRole;
+},
     },
     setup() {
         const router = useRouter();
@@ -149,13 +169,6 @@ export default {
         const isEditable = ref(false);
         const newDepartment = ref('');
 
-        /*  const addDepartment = () => {
-             if (newDepartment.value.trim()) {
-                 user.value.departments.push(newDepartment.value.trim());
-                 newDepartment.value = ''; // Limpiar el input
-                 updateUserDepartment(); // Actualizar el perfil después de agregar el departamento
-             }
-         }; */
         const addDepartment = async () => {
             if (newDepartment.value.trim()) {
                 user.value.departments.push(newDepartment.value.trim());
@@ -164,12 +177,7 @@ export default {
             }
         };
 
-        // Función para eliminar un departamento
-        /*  const removeDepartment = (index) => {
-             user.value.departments.splice(index, 1);
-             updateUserDepartment(); // Actualizar el perfil después de remover el departamento
-         };
-  */
+ 
         const removeDepartment = async (index) => {
             user.value.departments.splice(index, 1);
             await updateUserDepartment(); // También actualiza el perfil aquí.
@@ -202,7 +210,7 @@ export default {
                 // Si no hay campo departments o no es un arreglo, inicializar como arreglo vacío
                 user.value = { ...data, departments: Array.isArray(data.departments) ? data.departments : [] };
             }
-            // Resto del código...
+            
         });
 
         const updateUserProfile = async () => {
