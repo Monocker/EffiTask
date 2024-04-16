@@ -1,14 +1,14 @@
-
-
-
 <template>
-    <div v-if="isOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex justify-center items-center">
+    <div v-if="isOpen"
+        class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex justify-center items-center">
         <div class="relative p-5 w-full max-w-md mx-4 sm:mx-auto rounded-md bg-white shadow-lg">
             <div class="text-center">
                 <h3 class="text-lg font-medium text-gray-900">Tarea</h3>
                 <div class="mt-2">
-                    <input v-model="editableTask.projectName" type="text" placeholder="Título" class="mt-2 p-2 w-full border rounded" :disabled="!isEditable" />
-                    <textarea v-model="editableTask.description" placeholder="Descripción" class="mt-2 p-2 w-full border rounded" :disabled="!isEditable" rows="4"></textarea>
+                    <input v-model="editableTask.projectName" type="text" placeholder="Título"
+                        class="mt-2 p-2 w-full border rounded" :disabled="!isEditable" />
+                    <textarea v-model="editableTask.description" placeholder="Descripción"
+                        class="mt-2 p-2 w-full border rounded" :disabled="!isEditable" rows="4"></textarea>
                     <input v-model="editableTask.startDate" type="date" placeholder="Start Date"
                         class="mt-2 p-2 w-full border rounded" />
                     <input v-model="editableTask.startTime" type="time" placeholder="Start Time"
@@ -21,13 +21,18 @@
                 </div>
             </div>
             <div v-if="role === 'manager'" class="mt-4 flex justify-end">
-                <button @click="closeModal" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 mr-2">Cerrar</button>
-                <button v-if="isEditable" @click="updateTask" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700">Guardar</button>
-                <button v-else @click="enableEdit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Editar</button>
+                <button @click="closeModal"
+                    class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 mr-2">Cerrar</button>
+                <button v-if="isEditable" @click="updateTask"
+                    class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700">Guardar</button>
+                <button v-else @click="enableEdit"
+                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Editar</button>
             </div>
             <div v-else class="mt-4 flex justify-end">
-                <button @click="closeModal" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 mr-2">Cerrar</button>
-                <button @click="markTaskAsCompleted" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Marcar como terminada</button>
+                <button @click="closeModal"
+                    class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 mr-2">Cerrar</button>
+                <button @click="markTaskAsCompleted"
+                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Marcar como terminada</button>
             </div>
         </div>
     </div>
@@ -37,6 +42,8 @@
 import { db } from '../../../../core/services/firebase/firebaseConfig';
 import { doc, updateDoc } from 'firebase/firestore';
 import Swal from 'sweetalert2';
+import { useRouter } from 'vue-router';
+
 
 export default {
     props: {
@@ -50,6 +57,9 @@ export default {
             editableTask: {},
         };
     },
+    setup() {
+        const router = useRouter();
+    },
     watch: {
         task: {
             handler(newVal) {
@@ -60,13 +70,36 @@ export default {
         }
     },
     created() {
-    console.log('Role received:', this.role);
-    this.role;
-}
-,
+        console.log('Role received:', this.role);
+        this.role;
+    }
+    ,
     methods: {
         enableEdit() {
             this.isEditable = true;
+        },
+        async markTaskAsCompleted() {
+            const taskRef = doc(db, 'tasks', this.editableTask.id);
+            updateDoc(taskRef, { status: true })
+                .then(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Tarea completada',
+                        text: 'La tarea ha sido marcada como completada.'
+                    });
+                    this.closeModal();
+
+                })
+                .catch((error) => {
+                    console.error('Error al marcar la tarea como completada:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Hubo un problema al marcar la tarea como completada.'
+                    });
+                });
+
+
         },
         async updateTask() {
             try {
@@ -94,7 +127,8 @@ export default {
         closeModal() {
             this.isEditable = false;
             this.$emit('update:isOpen', false);
-        }
+        },
+
     }
 
 };

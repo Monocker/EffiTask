@@ -89,10 +89,10 @@ export default {
 
                         let q;
                         if (userRole === 'manager') {
-                            q = query(collection(db, 'tasks'), where('idManager', '==', userId));
+                            q = query(collection(db, 'tasks'), where('idManager', '==', userId), where('status', '==', false));
                         }
                         if (userRole === 'employee' && collaboratorId) {
-                            q = query(collection(db, 'tasks'), where('idCollaborator', '==', collaboratorId));
+                            q = query(collection(db, 'tasks'), where('idCollaborator', '==', collaboratorId),where('status', '==', false));
                         }
 
                         if (q) {

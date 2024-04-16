@@ -24,6 +24,7 @@
                     <input v-model="endTime" type="time" placeholder="End Time"
                         class="mt-2 p-2 w-full border rounded" />
                     <input v-model="idManager" type="hidden" />
+                    <input v-model="status" type="hidden" />
                 </div>
             </div>
             <div class="mt-4 flex justify-end">
@@ -62,6 +63,7 @@ export default {
             startTime: '',
             endTime: '',
             idManager: '', // Añade esta propiedad para almacenar el ID del manager
+            status: false
         };
     },
     methods: {
@@ -87,6 +89,7 @@ export default {
                         endDate: this.endDate,
                         endTime: this.endTime,
                         idManager: this.idManager,
+                        status: this.status
                     });
                     Swal.fire({
                         icon: 'success',

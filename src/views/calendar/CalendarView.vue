@@ -107,7 +107,7 @@ export default {
     const fetchTasks = async () => {
       const user = auth.currentUser;
       if (user) {
-        const q = query(collection(db, 'tasks'), where('idManager', '==', user.uid));
+        const q = query(collection(db, 'tasks'), where('idManager', '==', user.uid),where('status', '==', false));
         const querySnapshot = await getDocs(q);
         tasks.value = querySnapshot.docs.map(doc => doc.data());
       }
