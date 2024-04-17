@@ -28,7 +28,11 @@
             <div class="mt-4 flex justify-end">
                 <button @click="closeModal"
                     class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 mr-2">Cerrar</button>
-                <button v-if="isEditable" @click="updateColaborador"
+                    <button @click="deleteColaborador" class="px-4 py-2 mr-2 bg-gray-500 text-white rounded hover:bg-gray-700">
+    <i class="material-icons">delete</i> <!-- Icono de basura -->
+</button>
+
+                    <button v-if="isEditable" @click="updateColaborador"
                     class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700">Guardar</button>
                 <button v-else @click="enableEdit"
                     class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Editar</button>
@@ -39,7 +43,7 @@
 
 <script>
 import { db, auth } from '../../../core/services/firebase/firebaseConfig';
-import { doc, updateDoc, getDoc } from 'firebase/firestore';
+import { doc, updateDoc, getDoc, deleteDoc } from 'firebase/firestore';
 import Swal from 'sweetalert2';
 
 export default {
@@ -70,6 +74,25 @@ export default {
         }
     },
     methods: {
+        async deleteColaborador() {
+        try {
+            const colaboradorRef = doc(db, 'collaborators', this.editablePerson.id);
+            await deleteDoc(colaboradorRef);
+            Swal.fire({
+                icon: 'success',
+                title: 'Colaborador eliminado',
+                text: 'El colaborador ha sido eliminado correctamente.'
+            });
+            this.closeModal();
+        } catch (error) {
+            console.error('Error al eliminar el colaborador:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un problema al eliminar el colaborador.'
+            });
+        }
+    },
         async enableEdit() {
             await this.fetchUserDepartments();
             this.isEditable = true;
