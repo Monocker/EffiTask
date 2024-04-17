@@ -23,11 +23,16 @@
             <div v-if="role === 'manager'" class="mt-4 flex justify-end">
                 <button @click="closeModal"
                     class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 mr-2">Cerrar</button>
-                <button v-if="isEditable" @click="updateTask"
+                    <button @click="deleteTask" class="px-4 py-2 mr-2 bg-gray-500 text-white rounded hover:bg-gray-700">
+                    <i class="material-icons">delete</i> <!-- Icono de basura -->
+                </button>
+                    <button v-if="isEditable" @click="updateTask"
                     class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700">Guardar</button>
                 <button v-else @click="enableEdit"
-                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Editar</button>
+                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 mr-2">Editar</button>
+                
             </div>
+
             <div v-else class="mt-4 flex justify-end">
                 <button @click="closeModal"
                     class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 mr-2">Cerrar</button>
@@ -40,7 +45,7 @@
 
 <script>
 import { db } from '../../../../core/services/firebase/firebaseConfig';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, deleteDoc  } from 'firebase/firestore';
 import Swal from 'sweetalert2';
 import { useRouter } from 'vue-router';
 
@@ -75,6 +80,25 @@ export default {
     }
     ,
     methods: {
+        async deleteTask() {
+            try {
+                const taskRef = doc(db, 'tasks', this.editableTask.id);
+                await deleteDoc(taskRef);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Tarea eliminada',
+                    text: 'La tarea ha sido eliminada correctamente.'
+                });
+                this.closeModal();
+            } catch (error) {
+                console.error('Error al eliminar la tarea:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Hubo un problema al eliminar la tarea.'
+                });
+            }
+        },
         enableEdit() {
             this.isEditable = true;
         },
