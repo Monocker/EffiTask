@@ -31,7 +31,7 @@ const registerUser = async (
   })
 }
 
-const registerCollaborator = async (email: string, password: string, collaboratorId: string) => {
+const registerCollaborator = async (email: string, password: string, collaboratorId: string, fullName: string) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password)
     const user = userCredential.user
@@ -42,7 +42,8 @@ const registerCollaborator = async (email: string, password: string, collaborato
       email: email,
       role: 'employee',
       collaboratorId: collaboratorId, // Aquí asignamos el ID del colaborador
-      createdAt: new Date()
+      createdAt: new Date(),
+      fullName: fullName
     })
   } catch (error) {
     console.error(error)

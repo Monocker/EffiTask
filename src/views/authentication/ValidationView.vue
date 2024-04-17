@@ -57,11 +57,13 @@ const email = ref('');
 const password = ref('');
 const passwordConfirmation = ref('');
 const collaboratorId = ref('');
+const fullName = ref('');
 
 onMounted(() => {
     const routeToken = router.currentRoute.value.query.token;
     token.value = Array.isArray(routeToken) ? routeToken.join(',') : routeToken;
     collaboratorId.value = router.currentRoute.value.query.collaboratorId;
+    fullName.value = router.currentRoute.value.query.fullName;
 });
 
 const validateEmail = async () => { 
@@ -92,7 +94,7 @@ const validateEmail = async () => {
             const userDoc = querySnapshot.docs[0];
             const collaboratorId = userDoc.id;
 
-            await registerCollaborator(email.value, password.value, collaboratorId);
+            await registerCollaborator(email.value, password.value, collaboratorId, fullName.value);
             await router.push('/login');
         } else {
             Swal.fire({
